@@ -15,12 +15,10 @@ export class Server
         this.server.get('/ping', (req, res) => res.send('pong'));
     }
 
-
-    public Start(port: number)
+    public Start(port: number): void
     {
-        this.server.listen(port, () => console.log(`Monkey-Challenge-Driver server started @ http://localhost:${port}`));
+        this.server.listen(port, () => console.log(`Raspberry Pi Remote IO server started @ ${port}`));
     }
-
 
     public OnCommand(url, callback: (urlParams) => void)
     {
@@ -31,7 +29,6 @@ export class Server
             res.sendStatus(200);
         });
     }
-
 
     public OnQuery(url, callback: (req, res) => void)
     {

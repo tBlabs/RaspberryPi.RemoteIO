@@ -16,16 +16,16 @@ let Sensors = class Sensors {
         this.sensor1 = new onoff_1.Gpio(24, 'in', 'both', { debounceTimeout: 10 });
         this.sensor2 = new onoff_1.Gpio(25, 'in', 'both', { debounceTimeout: 10 });
         this.sensor1.watch((err, value) => {
-            var _a, _b;
+            var _a;
             if (err)
                 throw err;
-            (_b = (_a = this).sensorAChangeCallback) === null || _b === void 0 ? void 0 : _b.call(_a, value);
+            (_a = this.sensorAChangeCallback) === null || _a === void 0 ? void 0 : _a.call(this, value);
         });
         this.sensor2.watch((err, value) => {
-            var _a, _b;
+            var _a;
             if (err)
                 throw err;
-            (_b = (_a = this).sensorBChangeCallback) === null || _b === void 0 ? void 0 : _b.call(_a, value);
+            (_a = this.sensorBChangeCallback) === null || _a === void 0 ? void 0 : _a.call(this, value);
         });
     }
     get StateAsString() {

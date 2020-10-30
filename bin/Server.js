@@ -19,7 +19,7 @@ let Server = class Server {
         this.server.get('/ping', (req, res) => res.send('pong'));
     }
     Start(port) {
-        this.server.listen(port, () => console.log(`Monkey-Challenge-Driver server started @ http://localhost:${port}`));
+        this.server.listen(port, () => console.log(`Raspberry Pi Remote IO server started @ ${port}`));
     }
     OnCommand(url, callback) {
         this.server.get(url, (req, res) => {

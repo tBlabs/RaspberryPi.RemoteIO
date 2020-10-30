@@ -36,6 +36,7 @@ export class Sensors implements ISensors
             this.sensorBChangeCallback?.(value);
         });
     }
+    
     public get StateAsString(): string
     {
         return "A: " + this.sensor1.readSync() ? "1" : "0"

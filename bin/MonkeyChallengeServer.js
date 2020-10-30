@@ -45,7 +45,7 @@ let MonkeyChallengeServer = class MonkeyChallengeServer {
 };
 MonkeyChallengeServer = __decorate([
     inversify_1.injectable(),
-    __metadata("design:paramtypes", [Config_1.Config])
+    __metadata("design:paramtypes", [Config_1.MonkeyConfig])
 ], MonkeyChallengeServer);
 exports.MonkeyChallengeServer = MonkeyChallengeServer;
 //# sourceMappingURL=MonkeyChallengeServer.js.map

@@ -5,21 +5,63 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const inversify_1 = require("inversify");
+const Types_1 = require("../../IoC/Types");
 let Logger = class Logger {
-    Log(str) {
-        console.log(str);
+    constructor(_output) {
+        this._output = _output;
+        this.LogEnable = true;
+        this.TraceEnable = true;
+    }
+    Log(...params) {
+        if (this.LogEnable) {
+            const str = params.map(this.ObjectToString).join(' ');
+            this._output.Print(str);
+            return str;
+        }
+        else
+            return '';
+    }
+    Trace(...params) {
+        if (this.TraceEnable) {
+            return this.Log('  ', ...params);
+        }
+        else
+            return '';
+    }
+    Error(...params) {
+        const str = params.map(this.ObjectToString).join(' ');
+        this._output.Print(str);
     }
     ObjectToString(obj) {
-        if (obj === undefined) {
+        if ((obj === null || obj === void 0 ? void 0 : obj.constructor) === String) {
+            return obj.replace(/\n/g, '\\n')
+                .replace(/\r/g, '\\r')
+                .replace(/\t/g, '\\t');
+            // return obj.replace(/\n/g, '<NL>')
+            //     .replace(/\r/g, '<CR>')
+            //     .replace(/\t/g, '<TAB>');
+        }
+        else if (obj === undefined) {
             return 'undefined';
         }
         else if (obj === null) {
             return 'null';
         }
         else if (obj instanceof Object) {
-            return JSON.stringify(obj);
+            return JSON.stringify(obj)
+                .replace(/{"/g, "{ ")
+                .replace(/}/g, " }")
+                .replace(/,"/g, ", ")
+                .replace(/":/g, ": ");
         }
         else {
             return obj;
@@ -27,7 +69,9 @@ let Logger = class Logger {
     }
 };
 Logger = __decorate([
-    inversify_1.injectable()
+    inversify_1.injectable(),
+    __param(0, inversify_1.inject(Types_1.Types.ILoggerOutput)),
+    __metadata("design:paramtypes", [Object])
 ], Logger);
 exports.Logger = Logger;
 //# sourceMappingURL=Logger.js.map

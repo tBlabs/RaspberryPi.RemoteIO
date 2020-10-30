@@ -110,7 +110,7 @@ export class HelpBuilder
     {
         return this.Styles
             + '<div>'
-            + this.Header(`Welcom to ${this.appName}`)
+            + this.Header(`Welcome to ${this.appName}`)
             + '<hr>'
             + this.Header("Glossary")
             + this.Glossaries + this.LineBreak

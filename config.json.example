@@ -1,0 +1,13 @@
+{
+    "port": 8000,
+    "outputs": [
+        {
+            "name": "GreenLed",
+            "pin": 17
+        },
+        {
+            "name": "RedLed",
+            "pin": 18
+        }
+    ]
+}

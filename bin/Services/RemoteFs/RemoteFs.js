@@ -14,25 +14,30 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
-let Config = class Config {
-    constructor(_fs) {
-        this._fs = _fs;
+let RemoteFs = class RemoteFs {
+    constructor(_log, _shell) {
+        this._log = _log;
+        this._shell = _shell;
     }
-    get Port() {
-        return this.config.port;
+    async WriteFile(fileName, data) {
+        const cmd = `echo ${data.replace(/"/g, "\\\"")} > ${fileName}`;
+        const result = await this._shell.ExecAsync(cmd);
+        if (!result.IsSuccess)
+            throw new Error(`Could not save: ${result.Message}`);
     }
-    get Outputs() {
-        return this.config.outputs;
-    }
-    async Init() {
-        const configAsString = await this._fs.ReadFile("/home/pi/RemoteIO/config.json");
-        this.config = JSON.parse(configAsString);
+    async ReadFile(fileName) {
+        const cmd = `cat ${fileName}`;
+        const result = await this._shell.ExecAsync(cmd);
+        if (!result.IsSuccess)
+            throw new Error(`Could not read "${fileName}". File not exists? Message: ${result.Message}`);
+        return result.StdOut;
     }
 };
-Config = __decorate([
+RemoteFs = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject(Types_1.Types.IFileSystem)),
-    __metadata("design:paramtypes", [Object])
-], Config);
-exports.Config = Config;
-//# sourceMappingURL=Config.js.map
+    __param(0, inversify_1.inject(Types_1.Types.ILogger)),
+    __param(1, inversify_1.inject(Types_1.Types.IShell)),
+    __metadata("design:paramtypes", [Object, Object])
+], RemoteFs);
+exports.RemoteFs = RemoteFs;
+//# sourceMappingURL=RemoteFs.js.map
