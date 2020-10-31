@@ -16,13 +16,13 @@ export class RemoteShell implements IShell
     {
         return new Promise(async (resolve, reject) =>
         {
-            this._log.Trace('Exec:', cmd, `@ ${process.env.HTTP_TO_CLI}/shell64`);
+            this._log.Trace('Exec:', cmd, `@ ${process.env.REMOTE_SHELL}/shell64`);
 
             try 
             {
                 const cmdAsBase64 = Buffer.from(cmd).toString('base64');
 
-                const response = await Axios.get(`${process.env.HTTP_TO_CLI}/shell64/${cmdAsBase64}`, { timeout: 5 * 1000, responseType: 'text', transformResponse: [] }); // We need to use transformResponse because  responseType='text' is not working (https://github.com/axios/axios/issues/2791)
+                const response = await Axios.get(`${process.env.REMOTE_SHELL}/shell64/${cmdAsBase64}`, { timeout: 5 * 1000, responseType: 'text', transformResponse: [] }); // We need to use transformResponse because  responseType='text' is not working (https://github.com/axios/axios/issues/2791)
 
                 this._log.Trace('Result:', response.data, `(http status: ${response.status})`);
 

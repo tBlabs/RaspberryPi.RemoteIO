@@ -4,19 +4,29 @@ class HelpBuilder {
     constructor(appName, description) {
         this.appName = appName;
         this.description = description;
+        this.warnings = [];
         this.glossaries = [];
         this.configs = [];
         this.statuses = [];
         this.apis = [];
+        this.requirements = [];
         this.NewLine = "<br />";
         this.LineBreak = this.NewLine + this.NewLine;
+    }
+    Warning(texts) {
+        this.warnings.push(...texts);
+        return this;
     }
     Glossary(key, value) {
         this.glossaries.push({ key, value });
         return this;
     }
+    Requirement(key, value) {
+        this.requirements.push({ key, value });
+        return this;
+    }
     Config(key, value, defaultValue = "", example = "", source = "") {
-        this.configs.push({ key, value, defaultValue, example, source });
+        this.configs.push({ key, value: value || "", defaultValue, example, source });
         return this;
     }
     Status(key, callback) {
@@ -53,11 +63,28 @@ class HelpBuilder {
             + this.apis.map(a => `<tr><td style="font-weight: bold"><a href=${a.url}>${a.url}</a></td><td>${a.purpose}</td></tr>`).join('')
             + `</table>`;
     }
+    get Requirements() {
+        if (this.apis.length === 0)
+            return "";
+        return `<table><tr><th>Thing</th><th>Purpose</th></tr>`
+            + this.requirements.map(a => `<tr><td style="font-weight: bold">${a.key}</td><td>${a.value}</td></tr>`).join('')
+            + `</table>`;
+    }
     get Styles() {
         return `<style>
         div {
             padding: 18px;
             margin: 0;
+        }
+
+        .warning {
+            padding: 24px;
+            margin-top: 12px;
+            background-color: maroon;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
         }
 
         p {
@@ -94,16 +121,30 @@ class HelpBuilder {
             return "";
         return this.Header(header) + text + this.LineBreak;
     }
+    Description(text) {
+        if (text === undefined || text.length === 0)
+            return "";
+        return '<i>' + this.description + '</i>';
+    }
+    get Warnings() {
+        if (this.warnings.length === 0)
+            return "";
+        return this.NewLine + this.NewLine + this.NewLine
+            + this.warnings.map(x => `<div class="warning">${x}</div>`).join("")
+            + this.NewLine;
+    }
     ToString() {
         return this.Styles
             + '<div>'
             + this.Header(`${this.appName}`)
-            + '<i>' + this.description + '</i>'
+            + this.Description(this.description)
+            + this.Warnings
             + '<hr>'
             + this.Section("Glossary", this.Glossaries)
             + this.Section("Status", this.Statuses)
             + this.Section("Config", this.Configs)
             + this.Section("API", this.Apis)
+            + this.Section("Requirements", this.Requirements)
             + '</div>';
     }
 }

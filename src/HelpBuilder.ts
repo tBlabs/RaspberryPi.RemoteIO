@@ -1,13 +1,22 @@
 
 export class HelpBuilder
 {
+    private warnings: string[] = [];
     private glossaries: { key: string; value: string; }[] = [];
     private configs: { key: string; value: string; defaultValue: string; example: string; source: string; }[] = [];
     private statuses: { key: string; callback: () => string; }[] = [];
     private apis: { url: string; purpose: string; }[] = [];
+    private requirements: { key: string; value: string; }[] = [];
 
     constructor(private appName: string, private description?: string)
     { }
+
+    public Warning(texts: string[]): this
+    {
+        this.warnings.push(...texts);
+
+        return this;
+    }
 
     public Glossary(key: string, value: string): this
     {
@@ -16,9 +25,16 @@ export class HelpBuilder
         return this;
     }
 
-    public Config(key: string, value: string, defaultValue: string = "", example: string = "", source: string = ""): this
+    public Requirement(key: string, value: string): this
     {
-        this.configs.push({ key, value, defaultValue, example, source });
+        this.requirements.push({ key, value });
+
+        return this;
+    }
+
+    public Config(key: string, value?: string, defaultValue: string = "", example: string = "", source: string = ""): this
+    {
+        this.configs.push({ key, value: value || "", defaultValue, example, source });
 
         return this;
     }
@@ -74,12 +90,31 @@ export class HelpBuilder
             + `</table>`;
     }
 
+    private get Requirements()
+    {
+        if (this.apis.length === 0) return "";
+
+        return `<table><tr><th>Thing</th><th>Purpose</th></tr>`
+            + this.requirements.map(a => `<tr><td style="font-weight: bold">${a.key}</td><td>${a.value}</td></tr>`).join('')
+            + `</table>`;
+    }
+
     public get Styles()
     {
         return `<style>
         div {
             padding: 18px;
             margin: 0;
+        }
+
+        .warning {
+            padding: 24px;
+            margin-top: 12px;
+            background-color: maroon;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 18px;
         }
 
         p {
@@ -121,17 +156,35 @@ export class HelpBuilder
         return this.Header(header) + text + this.LineBreak;
     }
 
+    private Description(text)
+    {
+        if (text === undefined || text.length === 0) return "";
+
+        return '<i>' + this.description + '</i>';
+    }
+
+    private get Warnings(): string
+    {
+        if (this.warnings.length === 0) return "";
+
+        return this.NewLine + this.NewLine + this.NewLine
+            + this.warnings.map(x => `<div class="warning">${x}</div>`).join("")
+            + this.NewLine;
+    }
+
     public ToString()
     {
         return this.Styles
             + '<div>'
             + this.Header(`${this.appName}`)
-            + '<i>' + this.description + '</i>'
+            + this.Description(this.description)
+            + this.Warnings
             + '<hr>'
             + this.Section("Glossary", this.Glossaries)
             + this.Section("Status", this.Statuses)
             + this.Section("Config", this.Configs)
             + this.Section("API", this.Apis)
+            + this.Section("Requirements", this.Requirements)
             + '</div>';
     }
 }

@@ -19,7 +19,6 @@ export class OutputIO implements IDisposable
 
     public Set(value: BinaryValue): void
     {
-        console.log(this.Name,'-->',value);
         this.IO.writeSync(value);
     }
 
@@ -52,10 +51,9 @@ export class Outputs implements IDisposable
 
             this.outputs.push(output);
         });
-        console.log('OUTPUTS',this.outputs);
     }
 
-    public SetValue(name: string, value: BinaryValue): void
+    public SetValue(name: string, value: number): void
     {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);
         
@@ -67,7 +65,7 @@ export class Outputs implements IDisposable
         }
         else
         {
-            io.Set(value);
+            io.Set(+value as BinaryValue);
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }

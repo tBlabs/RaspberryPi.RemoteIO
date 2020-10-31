@@ -22,7 +22,6 @@ class OutputIO {
         this.IO = new onoff_1.Gpio(output.pin, 'out');
     }
     Set(value) {
-        console.log(this.Name, '-->', value);
         this.IO.writeSync(value);
     }
     Get() {
@@ -44,7 +43,6 @@ let Outputs = class Outputs {
             const output = new OutputIO(o);
             this.outputs.push(output);
         });
-        console.log('OUTPUTS', this.outputs);
     }
     SetValue(name, value) {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);
@@ -53,7 +51,7 @@ let Outputs = class Outputs {
             this._log.Trace(`IO not found`);
         }
         else {
-            io.Set(value);
+            io.Set(+value);
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
