@@ -23,11 +23,14 @@ let Main = class Main {
     }
     async Start() {
         let led1 = new onoff_1.Gpio(17, 'out');
-        let led2 = new onoff_1.Gpio(18, 'out');
+        // let led2 = new Gpio(18, 'out');
+        let led2 = new Outputs_1.OutputIO({ name: "led", pin: 18 });
+        let i = 0;
         setInterval(() => {
             led1.writeSync(led1.readSync() ^ 1);
-            led2.writeSync(led2.readSync() ^ 1);
-        }, 500);
+            // led2.writeSync(led2.readSync() ^ 1);
+            led2.Set(1 - i);
+        }, 1000);
         await this._config.Init();
         await this._outputs.Init();
         this._server.OnQuery('/', (req, res) => {
