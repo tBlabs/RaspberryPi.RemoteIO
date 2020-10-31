@@ -52,6 +52,7 @@ export class Outputs implements IDisposable
 
             this.outputs.push(output);
         });
+        console.log('OUTPUTS',this.outputs);
     }
 
     public SetValue(name: string, value: BinaryValue): void

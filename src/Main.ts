@@ -16,18 +16,24 @@ export class Main
 
     public async Start(): Promise<void>
     {
-        let led1 = new Gpio(17, 'out');
+  
+        await this._config.Init();
+        await this._outputs.Init();
+
+        // let led1 = new Gpio(17, 'out');
         // let led2 = new Gpio(18, 'out');
-        let led2 = new OutputIO({ name: "led", pin: 18});
+        // let led2 = new OutputIO({ name: "led", pin: 18});
         let i=0;
         setInterval(()=>{
 
-            led1.writeSync(led1.readSync() ^ 1);
+            // led1.writeSync(led1.readSync() ^ 1);
             // led2.writeSync(led2.readSync() ^ 1);
-            led2.Set(1-i);
-        }, 1000);
-        await this._config.Init();
-        await this._outputs.Init();
+            // led2.Set(1-i);
+            this._outputs.SetValue("RedLed", i);
+            this._outputs.SetValue("GreenLed", 1-i);
+            i=1-i;
+            console.log(i);
+        }, 1500);
 
         this._server.OnQuery('/', (req, res) =>
         {

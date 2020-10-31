@@ -44,6 +44,7 @@ let Outputs = class Outputs {
             const output = new OutputIO(o);
             this.outputs.push(output);
         });
+        console.log('OUTPUTS', this.outputs);
     }
     SetValue(name, value) {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);

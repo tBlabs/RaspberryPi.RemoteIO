@@ -14,7 +14,6 @@ const Config_1 = require("./Services/Config/Config");
 const HelpBuilder_1 = require("./HelpBuilder");
 const Server_1 = require("./Server");
 const Outputs_1 = require("./Outputs");
-const onoff_1 = require("onoff");
 let Main = class Main {
     constructor(_config, _server, _outputs) {
         this._config = _config;
@@ -22,17 +21,21 @@ let Main = class Main {
         this._outputs = _outputs;
     }
     async Start() {
-        let led1 = new onoff_1.Gpio(17, 'out');
-        // let led2 = new Gpio(18, 'out');
-        let led2 = new Outputs_1.OutputIO({ name: "led", pin: 18 });
-        let i = 0;
-        setInterval(() => {
-            led1.writeSync(led1.readSync() ^ 1);
-            // led2.writeSync(led2.readSync() ^ 1);
-            led2.Set(1 - i);
-        }, 1000);
         await this._config.Init();
         await this._outputs.Init();
+        // let led1 = new Gpio(17, 'out');
+        // let led2 = new Gpio(18, 'out');
+        // let led2 = new OutputIO({ name: "led", pin: 18});
+        let i = 0;
+        setInterval(() => {
+            // led1.writeSync(led1.readSync() ^ 1);
+            // led2.writeSync(led2.readSync() ^ 1);
+            // led2.Set(1-i);
+            this._outputs.SetValue("RedLed", i);
+            this._outputs.SetValue("GreenLed", 1 - i);
+            i = 1 - i;
+            console.log(i);
+        }, 1500);
         this._server.OnQuery('/', (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("Raspberry.RemoteIO", "Raspberry Pi driver via Http")
                 .Glossary("Raspberry", "Raspberry Pi Zero board")
