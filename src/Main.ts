@@ -3,6 +3,7 @@ import { Config } from './Services/Config/Config';
 import { HelpBuilder } from './HelpBuilder';
 import { Server } from './Server';
 import { Outputs } from './Outputs';
+import { Gpio, BinaryValue } from 'onoff';
 
 @injectable()
 export class Main
@@ -15,6 +16,14 @@ export class Main
 
     public async Start(): Promise<void>
     {
+        let led1 = new Gpio(17, 'out');
+        let led2 = new Gpio(18, 'out');
+
+        setInterval(()=>{
+
+            led1.writeSync(led1.readSync() ^ 1);
+            led2.writeSync(led2.readSync() ^ 1);
+        }, 500);
         await this._config.Init();
         await this._outputs.Init();
 
@@ -31,7 +40,7 @@ export class Main
         });
 
         this._server.OnCommand('/set/output/:name/:value', params => this._outputs.SetValue(params.name, params.value));
-        this._server.OnQuery('/get/output/:name/value', (req, res) => res.send(this._outputs.GetValue(req.params.name)));
+        this._server.OnQuery('/get/output/:name/value', (req, res) => res.send(this._outputs.GetValue(req.params.name)?.toString() || ""));
 
 
         this._server.Start(this._config.Port);

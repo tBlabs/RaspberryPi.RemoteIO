@@ -14,6 +14,7 @@ const Config_1 = require("./Services/Config/Config");
 const HelpBuilder_1 = require("./HelpBuilder");
 const Server_1 = require("./Server");
 const Outputs_1 = require("./Outputs");
+const onoff_1 = require("onoff");
 let Main = class Main {
     constructor(_config, _server, _outputs) {
         this._config = _config;
@@ -21,6 +22,12 @@ let Main = class Main {
         this._outputs = _outputs;
     }
     async Start() {
+        let led1 = new onoff_1.Gpio(17, 'out');
+        let led2 = new onoff_1.Gpio(18, 'out');
+        setInterval(() => {
+            led1.writeSync(led1.readSync() ^ 1);
+            led2.writeSync(led2.readSync() ^ 1);
+        }, 500);
         await this._config.Init();
         await this._outputs.Init();
         this._server.OnQuery('/', (req, res) => {
@@ -33,7 +40,7 @@ let Main = class Main {
             res.send(help.ToString());
         });
         this._server.OnCommand('/set/output/:name/:value', params => this._outputs.SetValue(params.name, params.value));
-        this._server.OnQuery('/get/output/:name/value', (req, res) => res.send(this._outputs.GetValue(req.params.name)));
+        this._server.OnQuery('/get/output/:name/value', (req, res) => { var _a; return res.send(((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || ""); });
         this._server.Start(this._config.Port);
         process.on('SIGINT', () => {
             console.log('SIGINT detected. Disposing IO...');
