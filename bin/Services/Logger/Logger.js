@@ -16,10 +16,29 @@ require("reflect-metadata");
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
 let Logger = class Logger {
-    constructor(_output) {
+    constructor(
+    // @inject(Types.IConfig) _config: IConfig, // This cause circular dependency
+    _output) {
         this._output = _output;
-        this.LogEnable = true;
-        this.TraceEnable = true;
+        this.LogEnable = false;
+        this.TraceEnable = false;
+        // this.SetLogLevel(_config.LogsLevel);
+    }
+    SetLogLevel(level) {
+        switch (level) {
+            case 0:
+                this.LogEnable = false;
+                this.TraceEnable = false;
+                break;
+            case 1:
+                this.LogEnable = true;
+                this.TraceEnable = false;
+                break;
+            case 2:
+                this.LogEnable = true;
+                this.TraceEnable = true;
+                break;
+        }
     }
     Log(...params) {
         if (this.LogEnable) {
@@ -46,9 +65,6 @@ let Logger = class Logger {
             return obj.replace(/\n/g, '\\n')
                 .replace(/\r/g, '\\r')
                 .replace(/\t/g, '\\t');
-            // return obj.replace(/\n/g, '<NL>')
-            //     .replace(/\r/g, '<CR>')
-            //     .replace(/\t/g, '<TAB>');
         }
         else if (obj === undefined) {
             return 'undefined';

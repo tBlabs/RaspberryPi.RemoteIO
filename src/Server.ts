@@ -1,35 +1,48 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import * as express from 'express';
 import * as cors from 'cors';
+import { Types } from './IoC/Types';
+import { ILogger } from './Services/Logger/ILogger';
+import { Express } from 'express-serve-static-core';
+import { Server } from 'http';
+import { IConfig } from './Services/Config/Config';
 
 @injectable()
-export class Server
+export class Host
 {
-    private server;
+    private expressServer: Express;
+    private server!: Server;
 
-    constructor()
+    constructor(
+        @inject(Types.ILogger) private _log: ILogger,
+        @inject(Types.IConfig) private _config: IConfig
+        )
     {
-        this.server = express();
-        this.server.use(cors());
+        this.expressServer = express();
+        this.expressServer.use(cors());
 
-        this.server.get('/ping', (req, res) => res.send('pong'));
+        this.expressServer.get('/ping', (req, res) => res.send('pong'));
+    }
+    public Start(): void
+    {
+        this.server = this.expressServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
     }
 
-    public Start(port: number): void
+    public Dispose()
     {
-        this.server.listen(port, () => console.log(`Raspberry Pi Remote IO server started @ ${port}`));
+        this.server.close(() => this._log.Log('Server closed.'));
     }
 
     public OnCommand(url, callback: (urlParams) => void)
     {
-        this.server.get(url, (req, res) =>
+        this.expressServer.get(url, (req, res) =>
         {
             try
             {
                 callback(req.params);
 
                 res.sendStatus(200);
-            } 
+            }
             catch (error)
             {
                 res.sendStatus(500);
@@ -39,12 +52,12 @@ export class Server
 
     public OnQuery(url, callback: (req, res) => void)
     {
-        this.server.get(url, (req, res) =>
+        this.expressServer.get(url, (req, res) =>
         {
             try
             {
                 callback(req, res);
-            } 
+            }
             catch (error)
             {
                 res.sendStatus(500);

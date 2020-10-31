@@ -15,8 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
 let RemoteFs = class RemoteFs {
-    constructor(_log, _shell) {
-        this._log = _log;
+    constructor(_shell) {
         this._shell = _shell;
     }
     async WriteFile(fileName, data) {
@@ -35,9 +34,8 @@ let RemoteFs = class RemoteFs {
 };
 RemoteFs = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject(Types_1.Types.ILogger)),
-    __param(1, inversify_1.inject(Types_1.Types.IShell)),
-    __metadata("design:paramtypes", [Object, Object])
+    __param(0, inversify_1.inject(Types_1.Types.IShell)),
+    __metadata("design:paramtypes", [Object])
 ], RemoteFs);
 exports.RemoteFs = RemoteFs;
 //# sourceMappingURL=RemoteFs.js.map

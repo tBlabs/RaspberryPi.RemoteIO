@@ -13,7 +13,6 @@ export interface IFileSystem
 export class RemoteFs implements IFileSystem
 {
     constructor(
-        @inject(Types.ILogger) private _log: ILogger,
         @inject(Types.IShell) private _shell: IShell) { }
 
     public async WriteFile(fileName: string, data: string): Promise<void>

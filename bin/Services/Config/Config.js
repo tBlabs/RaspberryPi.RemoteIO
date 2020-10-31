@@ -15,15 +15,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
 let Config = class Config {
-    constructor(_fs) {
+    constructor(_args, _fs) {
+        this._args = _args;
         this._fs = _fs;
         this.configFileName = "config.json";
     }
     get Port() {
-        return this.config.port;
+        return this._args.Args.port || this.config.port || 8000;
     }
     get Outputs() {
         return this.config.outputs;
+    }
+    get LogsLevel() {
+        if (this._args.Args.logsLevel !== undefined)
+            return +this._args.Args.logsLevel;
+        if (this.config.logsLevel !== undefined)
+            return this.config.logsLevel;
+        return 1;
     }
     get ConfigFileName() {
         return this.configFileName;
@@ -32,17 +40,17 @@ let Config = class Config {
         try {
             const configAsString = await this._fs.ReadFile("/home/pi/RaspberryPi.RemoteIO/" + this.configFileName);
             this.config = JSON.parse(configAsString);
-            console.log(this.config);
         }
         catch (error) {
-            throw new Error('COULD NOT LOAD CONFIG. APP HALTED.');
+            throw new Error('COULD NOT LOAD CONFIG.');
         }
     }
 };
 Config = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject(Types_1.Types.IFileSystem)),
-    __metadata("design:paramtypes", [Object])
+    __param(0, inversify_1.inject(Types_1.Types.IStartupArgs)),
+    __param(1, inversify_1.inject(Types_1.Types.IFileSystem)),
+    __metadata("design:paramtypes", [Object, Object])
 ], Config);
 exports.Config = Config;
 //# sourceMappingURL=Config.js.map

@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const onoff_1 = require("onoff");
 const inversify_1 = require("inversify");
-const Config_1 = require("./Services/Config/Config");
 const Types_1 = require("./IoC/Types");
 class OutputIO {
     constructor(output) {
@@ -77,8 +76,9 @@ let Outputs = class Outputs {
 };
 Outputs = __decorate([
     inversify_1.injectable(),
+    __param(0, inversify_1.inject(Types_1.Types.IConfig)),
     __param(1, inversify_1.inject(Types_1.Types.ILogger)),
-    __metadata("design:paramtypes", [Config_1.Config, Object])
+    __metadata("design:paramtypes", [Object, Object])
 ], Outputs);
 exports.Outputs = Outputs;
 //# sourceMappingURL=Outputs.js.map

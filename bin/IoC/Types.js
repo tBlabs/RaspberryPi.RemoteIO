@@ -9,5 +9,6 @@ exports.Types = {
     ILoggerOutput: Symbol('ILoggerOutput'),
     IShell: Symbol('IShell'),
     IFileSystem: Symbol('IFileSystem'),
+    IConfig: Symbol('IConfig'),
 };
 //# sourceMappingURL=Types.js.map

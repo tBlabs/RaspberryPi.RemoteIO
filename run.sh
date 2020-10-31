@@ -1,0 +1,1 @@
+node bin/startup.js --port 3434 --logsLevel 2

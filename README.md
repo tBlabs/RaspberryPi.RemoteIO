@@ -1,0 +1,2 @@
+- logi on/off
+- problems class - czy apka ma startować bez załadowania plików itp

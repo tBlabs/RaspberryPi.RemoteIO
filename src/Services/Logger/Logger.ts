@@ -3,15 +3,39 @@ import { ILogger } from './ILogger';
 import { injectable, inject } from 'inversify';
 import { Types } from '../../IoC/Types';
 import { ILoggerOutput } from "./ILoggerOutput";
+import { IConfig } from '../Config/Config';
 
 @injectable()
 export class Logger implements ILogger
 {
-    public LogEnable: boolean = true;
-    public TraceEnable: boolean = true;
+    public LogEnable: boolean = false;
+    public TraceEnable: boolean = false;
 
-    constructor(@inject(Types.ILoggerOutput) private _output: ILoggerOutput)
-    { }
+    constructor(
+       // @inject(Types.IConfig) _config: IConfig, // This cause circular dependency
+        @inject(Types.ILoggerOutput) private _output: ILoggerOutput)
+    {
+        // this.SetLogLevel(_config.LogsLevel);
+    }
+
+    public SetLogLevel(level: number)
+    {
+        switch (level)
+        {
+            case 0:
+                this.LogEnable = false;
+                this.TraceEnable = false;
+                break;
+            case 1:
+                this.LogEnable = true;
+                this.TraceEnable = false;
+                break;
+            case 2:
+                this.LogEnable = true;
+                this.TraceEnable = true;
+                break;
+        }
+    }
 
     public Log(...params: any[]): string
     {
@@ -33,7 +57,7 @@ export class Logger implements ILogger
         }
         else return '';
     }
-    
+
     public Error(...params: any[]): void
     {
         const str = params.map(this.ObjectToString).join(' ');
@@ -47,9 +71,6 @@ export class Logger implements ILogger
             return obj.replace(/\n/g, '\\n')
                 .replace(/\r/g, '\\r')
                 .replace(/\t/g, '\\t');
-            // return obj.replace(/\n/g, '<NL>')
-            //     .replace(/\r/g, '<CR>')
-            //     .replace(/\t/g, '<TAB>');
         }
         else
             if (obj === undefined)

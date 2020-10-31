@@ -2,7 +2,7 @@ import { Gpio, BinaryValue } from 'onoff';
 import { inject, injectable } from 'inversify';
 import { Output } from './Output';
 import { IDisposable } from './IDisposable';
-import { Config } from './Services/Config/Config';
+import { Config, IConfig } from './Services/Config/Config';
 import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 
@@ -39,7 +39,7 @@ export class Outputs implements IDisposable
     private outputs: OutputIO[] = [];
 
     constructor(
-        private _config: Config,
+        @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger)
     { }
 
