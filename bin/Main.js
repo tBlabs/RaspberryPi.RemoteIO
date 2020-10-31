@@ -26,16 +26,18 @@ let Main = class Main {
         // let led1 = new Gpio(17, 'out');
         // let led2 = new Gpio(18, 'out');
         // let led2 = new OutputIO({ name: "led", pin: 18});
-        let i = 0;
-        setInterval(() => {
-            // led1.writeSync(led1.readSync() ^ 1);
-            // led2.writeSync(led2.readSync() ^ 1);
-            // led2.Set(1-i);
-            this._outputs.SetValue("RedLed", i);
-            this._outputs.SetValue("GreenLed", 1 - i);
-            i = 1 - i;
-            console.log(i);
-        }, 1500);
+        if (0) {
+            let i = 0;
+            setInterval(() => {
+                // led1.writeSync(led1.readSync() ^ 1);
+                // led2.writeSync(led2.readSync() ^ 1);
+                // led2.Set(1-i);
+                this._outputs.SetValue("RedLed", i);
+                this._outputs.SetValue("GreenLed", 1 - i);
+                i = 1 - i;
+                console.log(i);
+            }, 1500);
+        }
         this._server.OnQuery('/', (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("Raspberry.RemoteIO", "Raspberry Pi driver via Http")
                 .Glossary("Raspberry", "Raspberry Pi Zero board")

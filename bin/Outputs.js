@@ -22,7 +22,7 @@ class OutputIO {
         this.IO = new onoff_1.Gpio(output.pin, 'out');
     }
     Set(value) {
-        console.log(value);
+        console.log(this.Name, '-->', value);
         this.IO.writeSync(value);
     }
     Get() {

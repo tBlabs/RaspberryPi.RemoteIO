@@ -19,7 +19,7 @@ export class OutputIO implements IDisposable
 
     public Set(value: BinaryValue): void
     {
-        console.log(value);
+        console.log(this.Name,'-->',value);
         this.IO.writeSync(value);
     }
 
