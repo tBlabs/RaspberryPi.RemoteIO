@@ -62,6 +62,7 @@ export class Outputs implements IDisposable
         if (io === undefined)
         {
             this._log.Trace(`IO not found`);
+            throw new Error(`IO "${name}" not found.`);
         }
         else
         {
@@ -79,7 +80,8 @@ export class Outputs implements IDisposable
         if (io === undefined)
         {
             this._log.Trace(`IO not found`);
-            return undefined;
+            throw new Error(`IO "${name}" not found.`);
+
         }
         else
         {

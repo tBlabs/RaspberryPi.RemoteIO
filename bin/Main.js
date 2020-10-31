@@ -19,13 +19,14 @@ let Main = class Main {
         this._config = _config;
         this._server = _server;
         this._outputs = _outputs;
-        this.problems = [];
+        this.problems = []; // TODO: to trzeba przekuć w jakąś klasę...
     }
     async Start() {
         try {
             await this._config.Init();
         }
-        catch (error) {
+        catch (error) // TODO: może warto wsadzić to w metodę?
+         {
             this.problems.push("⚡ Could not load configuration from config.json file.");
         }
         try {
@@ -46,7 +47,9 @@ let Main = class Main {
                 .Requirement('Config file "config.json"', 'Is necessary to start the app. Defines server port and IO configuration.');
             res.send(help.ToString());
         });
-        this._server.OnCommand('/set/output/:name/:value', params => this._outputs.SetValue(params.name, +params.value));
+        this._server.OnCommand('/set/output/:name/:value', params => {
+            this._outputs.SetValue(params.name, +params.value);
+        });
         this._server.OnQuery('/get/output/:name/value', (req, res) => { var _a; return res.send(((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || ""); });
         this._server.Start(this._config.Port);
         process.on('SIGINT', () => {

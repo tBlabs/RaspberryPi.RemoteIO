@@ -24,9 +24,16 @@ export class Server
     {
         this.server.get(url, (req, res) =>
         {
-            callback(req.params);
+            try
+            {
+                callback(req.params);
 
-            res.sendStatus(200);
+                res.sendStatus(200);
+            } 
+            catch (error)
+            {
+                res.sendStatus(500);
+            }
         });
     }
 
@@ -34,7 +41,14 @@ export class Server
     {
         this.server.get(url, (req, res) =>
         {
-            callback(req, res);
+            try
+            {
+                callback(req, res);
+            } 
+            catch (error)
+            {
+                res.sendStatus(500);
+            }
         });
     }
 }

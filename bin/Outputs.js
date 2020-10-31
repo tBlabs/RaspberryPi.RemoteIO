@@ -49,6 +49,7 @@ let Outputs = class Outputs {
         const io = this.outputs.find(x => x.Name === name);
         if (io === undefined) {
             this._log.Trace(`IO not found`);
+            throw new Error(`IO "${name}" not found.`);
         }
         else {
             io.Set(+value);
@@ -60,7 +61,7 @@ let Outputs = class Outputs {
         const io = this.outputs.find(x => x.Name === name);
         if (io === undefined) {
             this._log.Trace(`IO not found`);
-            return undefined;
+            throw new Error(`IO "${name}" not found.`);
         }
         else {
             const value = io.Get();

@@ -13,7 +13,7 @@ export class Main
         private _outputs: Outputs)
     { }
 
-    private problems: string[] = [];
+    private problems: string[] = []; // TODO: to trzeba przekuć w jakąś klasę...
 
     public async Start(): Promise<void>
     {
@@ -21,7 +21,7 @@ export class Main
         {
             await this._config.Init();
         }
-        catch (error)
+        catch (error) // TODO: może warto wsadzić to w metodę?
         {
             this.problems.push("⚡ Could not load configuration from config.json file.");
         }
@@ -50,7 +50,10 @@ export class Main
             res.send(help.ToString());
         });
 
-        this._server.OnCommand('/set/output/:name/:value', params => this._outputs.SetValue(params.name, +params.value));
+        this._server.OnCommand('/set/output/:name/:value', params => 
+        {
+            this._outputs.SetValue(params.name, +params.value);
+        });
         this._server.OnQuery('/get/output/:name/value', (req, res) => res.send(this._outputs.GetValue(req.params.name)?.toString() || ""));
 
 

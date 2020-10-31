@@ -23,13 +23,23 @@ let Server = class Server {
     }
     OnCommand(url, callback) {
         this.server.get(url, (req, res) => {
-            callback(req.params);
-            res.sendStatus(200);
+            try {
+                callback(req.params);
+                res.sendStatus(200);
+            }
+            catch (error) {
+                res.sendStatus(500);
+            }
         });
     }
     OnQuery(url, callback) {
         this.server.get(url, (req, res) => {
-            callback(req, res);
+            try {
+                callback(req, res);
+            }
+            catch (error) {
+                res.sendStatus(500);
+            }
         });
     }
 };
