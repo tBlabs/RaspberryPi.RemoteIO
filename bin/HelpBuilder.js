@@ -1,25 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class HelpBuilder {
-    constructor(appName) {
+    constructor(appName, description) {
         this.appName = appName;
+        this.description = description;
         this.glossaries = [];
         this.configs = [];
         this.statuses = [];
         this.apis = [];
-        this.LineBreak = "<br /><br />";
         this.NewLine = "<br />";
+        this.LineBreak = this.NewLine + this.NewLine;
     }
     Glossary(key, value) {
         this.glossaries.push({ key, value });
         return this;
     }
-    Config(key, value, defaultValue = "", example = "") {
-        this.configs.push({ key, value, defaultValue, example });
+    Config(key, value, defaultValue = "", example = "", source = "") {
+        this.configs.push({ key, value, defaultValue, example, source });
         return this;
     }
-    Status(key, value) {
-        this.statuses.push({ key, value: value() });
+    Status(key, callback) {
+        this.statuses.push({ key, callback });
         return this;
     }
     Api(url, purpose) {
@@ -27,19 +28,27 @@ class HelpBuilder {
         return this;
     }
     get Glossaries() {
+        if (this.glossaries.length === 0)
+            return "";
         return `<dl>` + this.glossaries.map(d => `<dt style="font-weight: bold">${d.key}</dt><dd>${d.value}</dd>`).join('') + `</dl>`;
     }
     get Configs() {
-        return `<table><tr><th>Key</th><th>Value</th><th>Default</th><th>Example</th></tr>`
-            + this.configs.map(c => `<tr><td>${c.key}</td><td style="font-weight: bold">${c.value}</td><td>${c.defaultValue}</td><td>${c.example}</td></tr>`).join('')
+        if (this.configs.length === 0)
+            return "";
+        return `<table><tr><th>Key</th><th>Value</th><th>Default</th><th>Example</th><th>Source</th></tr>`
+            + this.configs.map(c => `<tr><td>${c.key}</td><td style="font-weight: bold">${c.value}</td><td>${c.defaultValue}</td><td>${c.example}</td><td>${c.source}</td></tr>`).join('')
             + `</table>`;
     }
     get Statuses() {
+        if (this.statuses.length === 0)
+            return "";
         return `<table><tr><th>Indicator</th><th>Status</th></tr>`
-            + this.statuses.map(s => `<tr><td>${s.key}</td><td>${s.value}</td></tr>`).join('')
+            + this.statuses.map(s => `<tr><td>${s.key}</td><td>${s.callback()}</td></tr>`).join('')
             + `</table>`;
     }
     get Apis() {
+        if (this.apis.length === 0)
+            return "";
         return `<table><tr><th>Url</th><th>Purpose</th></tr>`
             + this.apis.map(a => `<tr><td style="font-weight: bold"><a href=${a.url}>${a.url}</a></td><td>${a.purpose}</td></tr>`).join('')
             + `</table>`;
@@ -80,19 +89,21 @@ class HelpBuilder {
     Header(text) {
         return `<p>${text}</p>`;
     }
+    Section(header, text) {
+        if (text.length === 0)
+            return "";
+        return this.Header(header) + text + this.LineBreak;
+    }
     ToString() {
         return this.Styles
             + '<div>'
-            + this.Header(`Welcome to ${this.appName}`)
+            + this.Header(`${this.appName}`)
+            + '<i>' + this.description + '</i>'
             + '<hr>'
-            + this.Header("Glossary")
-            + this.Glossaries + this.LineBreak
-            + this.Header("Status")
-            + this.Statuses + this.LineBreak
-            + this.Header("Config")
-            + this.Configs + this.LineBreak
-            + this.Header("API")
-            + this.Apis + this.LineBreak
+            + this.Section("Glossary", this.Glossaries)
+            + this.Section("Status", this.Statuses)
+            + this.Section("Config", this.Configs)
+            + this.Section("API", this.Apis)
             + '</div>';
     }
 }

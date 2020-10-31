@@ -22,11 +22,12 @@ let Main = class Main {
     }
     async Start() {
         await this._config.Init();
+        await this._outputs.Init();
         this._server.OnQuery('/', (req, res) => {
-            const help = new HelpBuilder_1.HelpBuilder("Raspberry.RemoteIO")
+            const help = new HelpBuilder_1.HelpBuilder("Raspberry.RemoteIO", "Raspberry Pi driver via Http")
                 .Glossary("Raspberry", "Raspberry Pi Zero board")
-                .Config("Server Port", this._config.Port.toString(), "8000")
-                .Config("Outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`)
+                .Config("port", this._config.Port.toString(), "8000", "1234", this._config.ConfigFileName)
+                .Config("outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`, this._config.ConfigFileName)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`);
             res.send(help.ToString());

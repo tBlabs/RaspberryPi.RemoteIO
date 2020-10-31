@@ -24,11 +24,11 @@ let RemoteShell = class RemoteShell {
     ExecAsync(cmd) {
         return new Promise(async (resolve, reject) => {
             var _a, _b, _c, _d, _e;
-            this._log.Trace('Exec:', cmd);
+            this._log.Trace('Exec:', cmd, `@ ${process.env.HTTP_TO_CLI}/shell64`);
             try {
                 const cmdAsBase64 = Buffer.from(cmd).toString('base64');
-                const response = await axios_1.default.get(`${process.env.HTTP_TO_CLI}/shell64/${cmdAsBase64}`, { timeout: 5 * 1000 });
-                this._log.Trace('Result:', response.data, ' (http status:', response.status, ')');
+                const response = await axios_1.default.get(`${process.env.HTTP_TO_CLI}/shell64/${cmdAsBase64}`, { timeout: 5 * 1000, responseType: 'text', transformResponse: [] }); // We need to use transformResponse because  responseType='text' is not working (https://github.com/axios/axios/issues/2791)
+                this._log.Trace('Result:', response.data, `(http status: ${response.status})`);
                 resolve(new ExecOutput_1.ExecOutput(0, response.data, ""));
             }
             catch (error) {

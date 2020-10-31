@@ -17,6 +17,7 @@ const Types_1 = require("../../IoC/Types");
 let Config = class Config {
     constructor(_fs) {
         this._fs = _fs;
+        this.configFileName = "config.json";
     }
     get Port() {
         return this.config.port;
@@ -24,9 +25,18 @@ let Config = class Config {
     get Outputs() {
         return this.config.outputs;
     }
+    get ConfigFileName() {
+        return this.configFileName;
+    }
     async Init() {
-        const configAsString = await this._fs.ReadFile("/home/pi/RemoteIO/config.json");
-        this.config = JSON.parse(configAsString);
+        try {
+            const configAsString = await this._fs.ReadFile("/home/pi/RaspberryPi.RemoteIO/" + this.configFileName);
+            this.config = JSON.parse(configAsString);
+            console.log(this.config);
+        }
+        catch (error) {
+            throw new Error('COULD NOT LOAD CONFIG. APP HALTED.');
+        }
     }
 };
 Config = __decorate([

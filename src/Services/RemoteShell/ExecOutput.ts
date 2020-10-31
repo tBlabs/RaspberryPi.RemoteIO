@@ -1,7 +1,8 @@
 
 export class ExecOutput
 {
-    constructor(public code: number, public stdout: string, public stderr: string) { }
+    constructor(public code: number, public stdout: string, public stderr: string) 
+    { }
 
     public get IsSuccess(): boolean
     {

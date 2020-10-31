@@ -2,11 +2,11 @@
 export class HelpBuilder
 {
     private glossaries: { key: string; value: string; }[] = [];
-    private configs: { key: string; value: string; defaultValue: string; example: string; }[] = [];
-    private statuses: { key: string; value: string; }[] = [];
+    private configs: { key: string; value: string; defaultValue: string; example: string; source: string; }[] = [];
+    private statuses: { key: string; callback: () => string; }[] = [];
     private apis: { url: string; purpose: string; }[] = [];
 
-    constructor(private appName: string)
+    constructor(private appName: string, private description?: string)
     { }
 
     public Glossary(key: string, value: string): this
@@ -16,16 +16,16 @@ export class HelpBuilder
         return this;
     }
 
-    public Config(key: string, value: string, defaultValue: string = "", example: string = ""): this
+    public Config(key: string, value: string, defaultValue: string = "", example: string = "", source: string = ""): this
     {
-        this.configs.push({ key, value, defaultValue, example });
+        this.configs.push({ key, value, defaultValue, example, source });
 
         return this;
     }
 
-    public Status(key: string, value: () => string): this
+    public Status(key: string, callback: () => string): this
     {
-        this.statuses.push({ key, value: value() });
+        this.statuses.push({ key, callback });
 
         return this;
     }
@@ -37,30 +37,38 @@ export class HelpBuilder
         return this;
     }
 
-    private LineBreak = "<br /><br />";
     private NewLine = "<br />";
+    private LineBreak = this.NewLine + this.NewLine;
 
     private get Glossaries()
     {
+        if (this.glossaries.length === 0) return "";
+
         return `<dl>` + this.glossaries.map(d => `<dt style="font-weight: bold">${d.key}</dt><dd>${d.value}</dd>`).join('') + `</dl>`;
     }
 
     private get Configs()
     {
-        return `<table><tr><th>Key</th><th>Value</th><th>Default</th><th>Example</th></tr>`
-            + this.configs.map(c => `<tr><td>${c.key}</td><td style="font-weight: bold">${c.value}</td><td>${c.defaultValue}</td><td>${c.example}</td></tr>`).join('')
+        if (this.configs.length === 0) return "";
+
+        return `<table><tr><th>Key</th><th>Value</th><th>Default</th><th>Example</th><th>Source</th></tr>`
+            + this.configs.map(c => `<tr><td>${c.key}</td><td style="font-weight: bold">${c.value}</td><td>${c.defaultValue}</td><td>${c.example}</td><td>${c.source}</td></tr>`).join('')
             + `</table>`;
     }
 
     private get Statuses()
     {
+        if (this.statuses.length === 0) return "";
+
         return `<table><tr><th>Indicator</th><th>Status</th></tr>`
-            + this.statuses.map(s => `<tr><td>${s.key}</td><td>${s.value}</td></tr>`).join('')
+            + this.statuses.map(s => `<tr><td>${s.key}</td><td>${s.callback()}</td></tr>`).join('')
             + `</table>`;
     }
 
     private get Apis()
     {
+        if (this.apis.length === 0) return "";
+
         return `<table><tr><th>Url</th><th>Purpose</th></tr>`
             + this.apis.map(a => `<tr><td style="font-weight: bold"><a href=${a.url}>${a.url}</a></td><td>${a.purpose}</td></tr>`).join('')
             + `</table>`;
@@ -106,20 +114,24 @@ export class HelpBuilder
         return `<p>${text}</p>`;
     }
 
+    private Section(header, text)
+    {
+        if (text.length === 0) return "";
+
+        return this.Header(header) + text + this.LineBreak;
+    }
+
     public ToString()
     {
         return this.Styles
             + '<div>'
-            + this.Header(`Welcome to ${this.appName}`)
+            + this.Header(`${this.appName}`)
+            + '<i>' + this.description + '</i>'
             + '<hr>'
-            + this.Header("Glossary")
-            + this.Glossaries + this.LineBreak
-            + this.Header("Status")
-            + this.Statuses + this.LineBreak
-            + this.Header("Config")
-            + this.Configs + this.LineBreak
-            + this.Header("API")
-            + this.Apis + this.LineBreak
+            + this.Section("Glossary", this.Glossaries)
+            + this.Section("Status", this.Statuses)
+            + this.Section("Config", this.Configs)
+            + this.Section("API", this.Apis)
             + '</div>';
     }
 }
