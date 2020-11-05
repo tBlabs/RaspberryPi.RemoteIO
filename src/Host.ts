@@ -15,8 +15,7 @@ export class Host
 
     constructor(
         @inject(Types.ILogger) private _log: ILogger,
-        @inject(Types.IConfig) private _config: IConfig
-        )
+        @inject(Types.IConfig) private _config: IConfig)
     {
         this.expressServer = express();
         this.expressServer.use(cors());

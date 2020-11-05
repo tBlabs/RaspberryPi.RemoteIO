@@ -12,25 +12,9 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const onoff_1 = require("onoff");
 const inversify_1 = require("inversify");
 const Types_1 = require("./IoC/Types");
-class OutputIO {
-    constructor(output) {
-        this.Name = output.name;
-        this.IO = new onoff_1.Gpio(output.pin, 'out');
-    }
-    Set(value) {
-        this.IO.writeSync(value);
-    }
-    Get() {
-        return this.IO.readSync();
-    }
-    Dispose() {
-        this.IO.unexport();
-    }
-}
-exports.OutputIO = OutputIO;
+const OutputIO_1 = require("./OutputIO");
 let Outputs = class Outputs {
     constructor(_config, _log) {
         this._config = _config;
@@ -39,11 +23,11 @@ let Outputs = class Outputs {
     }
     Init() {
         this._config.Outputs.forEach((o) => {
-            const output = new OutputIO(o);
+            const output = new OutputIO_1.OutputIO(o);
             this.outputs.push(output);
         });
     }
-    SetValue(name, value) {
+    async SetValue(name, value) {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);
         const io = this.outputs.find(x => x.Name === name);
         if (io === undefined) {
@@ -51,11 +35,11 @@ let Outputs = class Outputs {
             throw new Error(`IO "${name}" not found.`);
         }
         else {
-            io.Set(+value);
+            await io.Set(+value);
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
-    GetValue(name) {
+    async GetValue(name) {
         this._log.Trace(`Reading output "${name}" value...`);
         const io = this.outputs.find(x => x.Name === name);
         if (io === undefined) {
@@ -63,7 +47,7 @@ let Outputs = class Outputs {
             throw new Error(`IO "${name}" not found.`);
         }
         else {
-            const value = io.Get();
+            const value = await io.Get();
             this._log.Trace(`"${name}" value is ${value}.`);
             return value;
         }

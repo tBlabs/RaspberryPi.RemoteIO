@@ -1,37 +1,10 @@
-import { Gpio, BinaryValue } from 'onoff';
+import { BinaryValue } from 'onoff';
 import { inject, injectable } from 'inversify';
-import { Output } from './Output';
 import { IDisposable } from './IDisposable';
-import { Config, IConfig } from './Services/Config/Config';
+import { IConfig } from './Services/Config/Config';
 import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
-
-export class OutputIO implements IDisposable
-{
-    public readonly Name: string;
-    public readonly IO: Gpio;
-
-    constructor(output: Output)
-    {
-        this.Name = output.name;
-        this.IO = new Gpio(output.pin, 'out');
-    }
-
-    public Set(value: BinaryValue): void
-    {
-        this.IO.writeSync(value);
-    }
-
-    public Get(): BinaryValue
-    {
-        return this.IO.readSync();
-    }
-
-    public Dispose(): void
-    {
-        this.IO.unexport();
-    }
-}
+import { OutputIO } from './OutputIO';
 
 @injectable()
 export class Outputs implements IDisposable
@@ -53,40 +26,44 @@ export class Outputs implements IDisposable
         });
     }
 
-    public SetValue(name: string, value: number): void
+    public async SetValue(name: string, value: number): Promise<void>
     {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);
-        
+
         const io = this.outputs.find(x => x.Name === name);
-        
+
         if (io === undefined)
         {
             this._log.Trace(`IO not found`);
+
             throw new Error(`IO "${name}" not found.`);
         }
         else
         {
-            io.Set(+value as BinaryValue);
+            await io.Set(+value as BinaryValue);
+
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
-    
-    public GetValue(name): BinaryValue | undefined
+
+    public async GetValue(name: string): Promise<BinaryValue | undefined>
     {
         this._log.Trace(`Reading output "${name}" value...`);
 
         const io = this.outputs.find(x => x.Name === name);
-        
+
         if (io === undefined)
         {
             this._log.Trace(`IO not found`);
-            throw new Error(`IO "${name}" not found.`);
 
+            throw new Error(`IO "${name}" not found.`);
         }
         else
         {
-            const value = io.Get();
+            const value = await io.Get();
+
             this._log.Trace(`"${name}" value is ${value}.`);
+
             return value;
         }
     }

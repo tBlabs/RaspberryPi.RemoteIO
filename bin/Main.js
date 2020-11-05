@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const HelpBuilder_1 = require("./HelpBuilder");
-const Server_1 = require("./Server");
+const Host_1 = require("./Host");
 const Outputs_1 = require("./Outputs");
 const Types_1 = require("./IoC/Types");
 let Main = class Main {
@@ -44,9 +44,9 @@ let Main = class Main {
             const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi driver via Http")
                 .Warning(this.problems)
                 .Config("REMOTE_SHELL", process.env.REMOTE_SHELL, "empty", "REMOTE_SHELL=http://192.168.43.229:3000", 'Environment variable process.env (".env" file)')
-                .Config("port", this._config.Port.toString(), "8000", "1234", this._config.ConfigFileName)
+                .Config("port", this._config.Port.toString(), "8000", "1234 (number value)", this._config.ConfigFileName)
                 .Config("outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`, this._config.ConfigFileName)
-                .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 / 1 / 2`, `--logsLevel param or in ${this._config.ConfigFileName}`)
+                .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileName}`)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
                 .Requirement('Active "Remote Shell" utility', 'Is necessary to download config file. (fs module may be used instead /IFileSystem/).')
@@ -69,7 +69,7 @@ Main = __decorate([
     inversify_1.injectable(),
     __param(0, inversify_1.inject(Types_1.Types.IConfig)),
     __param(1, inversify_1.inject(Types_1.Types.ILogger)),
-    __metadata("design:paramtypes", [Object, Object, Server_1.Host,
+    __metadata("design:paramtypes", [Object, Object, Host_1.Host,
         Outputs_1.Outputs])
 ], Main);
 exports.Main = Main;

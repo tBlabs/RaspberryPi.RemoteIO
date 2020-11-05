@@ -9,7 +9,7 @@ import { RunMode } from '../Services/RunMode/RunMode';
 import { ILogger } from '../Services/Logger/ILogger';
 import { Logger } from '../Services/Logger/Logger';
 import { Main } from '../Main';
-import { Host } from "../Server";
+import { Host } from "../Host";
 import { IStartupArgs } from '../Services/Environment/IStartupArgs';
 import { StartupArgs } from '../Services/Environment/StartupArgs';
 import { IDateTimeProvider, DateTimeProvider } from '../Services/DateTimeProvider/DateTimeProvider';

@@ -8,7 +8,7 @@ const Environment_1 = require("../Services/Environment/Environment");
 const RunMode_1 = require("../Services/RunMode/RunMode");
 const Logger_1 = require("../Services/Logger/Logger");
 const Main_1 = require("../Main");
-const Server_1 = require("../Server");
+const Host_1 = require("../Host");
 const StartupArgs_1 = require("../Services/Environment/StartupArgs");
 const DateTimeProvider_1 = require("../Services/DateTimeProvider/DateTimeProvider");
 const Config_1 = require("../Services/Config/Config");
@@ -31,7 +31,7 @@ try {
     IoC.bind(Main_1.Main).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Repeater_1.Repeater).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.IConfig).to(Config_1.Config).inSingletonScope().whenTargetIsDefault();
-    IoC.bind(Server_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(Host_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
 }
 catch (ex) {
