@@ -37,6 +37,10 @@ let Config = class Config {
         var _a;
         return ((_a = this.config) === null || _a === void 0 ? void 0 : _a.outputs) || [];
     }
+    get Pwms() {
+        var _a;
+        return ((_a = this.config) === null || _a === void 0 ? void 0 : _a.pwms) || [];
+    }
     get LogsLevel() {
         var _a;
         if (this._args.Args.logsLevel !== undefined)

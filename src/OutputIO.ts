@@ -1,5 +1,5 @@
-import { Gpio, BinaryValue } from 'onoff';
-import { Output } from './Output';
+ import { Gpio, BinaryValue } from 'onoff';
+import { OutputConfigEntry } from './OutputConfigEntry';
 import { IDisposable } from './IDisposable';
 
 export class OutputIO implements IDisposable
@@ -7,7 +7,7 @@ export class OutputIO implements IDisposable
     public readonly Name: string;
     public readonly IO: Gpio;
 
-    constructor(output: Output)
+    constructor(output: OutputConfigEntry)
     {
         this.Name = output.name;
         this.IO = new Gpio(output.pin, 'out');
@@ -15,7 +15,6 @@ export class OutputIO implements IDisposable
 
     public async Set(value: BinaryValue): Promise<void>
     {
-        // this.IO.writeSync(value);
         return new Promise((resolve, reject) =>
         {
             this.IO.write(value, (err) =>
@@ -30,7 +29,6 @@ export class OutputIO implements IDisposable
 
     public async Get(): Promise<BinaryValue>
     {
-        // return this.IO.readSync();
         return new Promise((resolve, reject) =>
         {
             this.IO.read((err, value) =>

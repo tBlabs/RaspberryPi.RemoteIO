@@ -18,6 +18,7 @@ const RemoteShell_1 = require("../Services/RemoteShell/RemoteShell");
 const RemoteFs_1 = require("../Services/RemoteFs/RemoteFs");
 const Outputs_1 = require("../Outputs");
 const FileSystem_1 = require("../Services/RemoteFs/FileSystem");
+const PwmOutputs_1 = require("../PwmOutputs");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
@@ -33,6 +34,7 @@ try {
     IoC.bind(Types_1.Types.IConfig).to(Config_1.Config).inSingletonScope().whenTargetIsDefault();
     IoC.bind(Host_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL) {
         // console.log('Using RemoteShell');
         IoC.bind(Types_1.Types.IFileSystem).to(RemoteFs_1.RemoteFs).inTransientScope().whenTargetIsDefault();

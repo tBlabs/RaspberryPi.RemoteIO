@@ -18,28 +18,17 @@ const Host_1 = require("./Host");
 const Outputs_1 = require("./Outputs");
 const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
-const pigpio_1 = require("pigpio");
+const PwmOutputs_1 = require("./PwmOutputs");
 let Main = class Main {
-    constructor(_config, _log, _server, _outputs) {
+    constructor(_config, _log, _server, _pwms, _outputs) {
         this._config = _config;
         this._log = _log;
         this._server = _server;
+        this._pwms = _pwms;
         this._outputs = _outputs;
         this.problems = []; // TODO: to trzeba przekuć w jakąś klasę...
     }
     async Start() {
-        // const Gpio = require('pigpio').Gpio;
-        console.log('start');
-        const led = new pigpio_1.Gpio(25, { mode: pigpio_1.Gpio.OUTPUT });
-        let dutyCycle = 0;
-        setInterval(() => {
-            led.pwmWrite(dutyCycle);
-            dutyCycle += 5;
-            console.log(dutyCycle);
-            if (dutyCycle > 255) {
-                dutyCycle = 0;
-            }
-        }, 20);
         try {
             await this._config.Init();
         }
@@ -64,6 +53,7 @@ let Main = class Main {
                 .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileDir}`)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
+                .Api('/set/pwm/:name/:value', `Set specified Pwm IO to given value (from 0 to 255)`)
                 .Requirement('Active "Remote Shell" utility', 'Is necessary to download config file. (fs module may be used instead /IFileSystem/).')
                 .Requirement(`Config file "config.json" in "${this._config.ConfigFileDir}"`, 'Is necessary to start the app. Defines server port and IO configuration.');
             res.send(help.ToString());
@@ -72,6 +62,9 @@ let Main = class Main {
             this._outputs.SetValue(params.name, +params.value);
         });
         this._server.OnQuery('/get/output/:name/value', (req, res) => { var _a; return res.send(((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || ""); });
+        this._server.OnCommand('/set/pwm/:name/:value', params => {
+            this._pwms.SetValue(params.name, +params.value);
+        });
         this._server.Start();
         process.on('SIGINT', () => {
             console.log('SIGINT detected. Closing server & disposing IO...');
@@ -85,6 +78,7 @@ Main = __decorate([
     __param(0, inversify_1.inject(Types_1.Types.IConfig)),
     __param(1, inversify_1.inject(Types_1.Types.ILogger)),
     __metadata("design:paramtypes", [Object, Object, Host_1.Host,
+        PwmOutputs_1.Pwms,
         Outputs_1.Outputs])
 ], Main);
 exports.Main = Main;

@@ -1,21 +1,23 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../IoC/Types";
 import { IFileSystem } from "../RemoteFs/IFileSystem";
-import { Output } from "../../Output";
+import { OutputConfigEntry } from "../../OutputConfigEntry";
 import { IStartupArgs } from "../Environment/IStartupArgs";
+import { PwmConfigEntry } from "../../PwmOutputs";
 
 export interface RawConfig
 {
     port: number;
     logsLevel: number;
-    outputs: Output[];
+    outputs: OutputConfigEntry[];
+    pwms: PwmConfigEntry[];
 }
 
 export interface IConfig
 {
     LogsLevel: number;
     Port: number;
-    Outputs: Output[];
+    Outputs: OutputConfigEntry[];
     ConfigFileDir: string;
     Init(): Promise<void>;
 }
@@ -50,9 +52,14 @@ export class Config implements IConfig
         return this._args.Args.port || this.config?.port || 8000;
     }
 
-    public get Outputs(): Output[]
+    public get Outputs(): OutputConfigEntry[]
     {
         return this.config?.outputs || [];
+    }
+
+    public get Pwms(): PwmConfigEntry[]
+    {
+        return this.config?.pwms || [];
     }
 
     public get LogsLevel(): number // || operator cannot be used here because it treats 0 as no value

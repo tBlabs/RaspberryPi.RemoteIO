@@ -6,7 +6,7 @@ import { Outputs } from './Outputs';
 import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
-import { Gpio } from 'pigpio';
+import { Pwms } from './PwmOutputs';
 
 @injectable()
 export class Main
@@ -15,6 +15,7 @@ export class Main
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger,
         private _server: Host,
+        private _pwms: Pwms,
         private _outputs: Outputs)
     { }
 
@@ -22,25 +23,6 @@ export class Main
 
     public async Start(): Promise<void>
     {
-
-        // const Gpio = require('pigpio').Gpio;
-console.log('start');
-        const led = new Gpio(25, { mode: Gpio.OUTPUT });
-
-        let dutyCycle = 0;
-
-        setInterval(() =>
-        {
-            led.pwmWrite(dutyCycle);
-
-            dutyCycle += 5;
-            console.log(dutyCycle);
-            if (dutyCycle > 255)
-            {
-                dutyCycle = 0;
-            }
-        }, 20);
-
         try
         {
             await this._config.Init();
@@ -72,6 +54,7 @@ console.log('start');
                 .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileDir}`)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
+                .Api('/set/pwm/:name/:value', `Set specified Pwm IO to given value (from 0 to 255)`)
                 .Requirement('Active "Remote Shell" utility', 'Is necessary to download config file. (fs module may be used instead /IFileSystem/).')
                 .Requirement(`Config file "config.json" in "${this._config.ConfigFileDir}"`, 'Is necessary to start the app. Defines server port and IO configuration.');
 
@@ -83,7 +66,11 @@ console.log('start');
             this._outputs.SetValue(params.name, +params.value);
         });
         this._server.OnQuery('/get/output/:name/value', (req, res) => res.send(this._outputs.GetValue(req.params.name)?.toString() || ""));
-
+        
+        this._server.OnCommand('/set/pwm/:name/:value', params => 
+        {
+            this._pwms.SetValue(params.name, +params.value);
+        });
 
         this._server.Start();
 
