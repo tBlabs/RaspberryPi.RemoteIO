@@ -35,7 +35,7 @@ let Pwms = class Pwms {
         this.pwms = [];
     }
     Init() {
-        this._config.Outputs.forEach((io) => {
+        this._config.Pwms.forEach((io) => {
             const pwm = new PwmIO(io);
             this.pwms.push(pwm);
         });

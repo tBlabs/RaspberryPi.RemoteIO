@@ -45,7 +45,7 @@ export class Pwms
 
     public Init(): void
     {
-        this._config.Outputs.forEach((io) =>
+        this._config.Pwms.forEach((io) =>
         {
             const pwm = new PwmIO(io);
 

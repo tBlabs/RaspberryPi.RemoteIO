@@ -3,7 +3,7 @@ import { Types } from "../../IoC/Types";
 import { IFileSystem } from "../RemoteFs/IFileSystem";
 import { OutputConfigEntry } from "../../OutputConfigEntry";
 import { IStartupArgs } from "../Environment/IStartupArgs";
-import { PwmConfigEntry } from "../../PwmOutputs";
+import { PwmConfigEntry, Pwms } from "../../PwmOutputs";
 
 export interface RawConfig
 {
@@ -18,6 +18,7 @@ export interface IConfig
     LogsLevel: number;
     Port: number;
     Outputs: OutputConfigEntry[];
+    Pwms: PwmConfigEntry[];
     ConfigFileDir: string;
     Init(): Promise<void>;
 }
