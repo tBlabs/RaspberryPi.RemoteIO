@@ -32,7 +32,6 @@ export class PwmIO
     }
 }
 
-
 @injectable()
 export class Pwms
 {
@@ -45,12 +44,15 @@ export class Pwms
 
     public Init(): void
     {
+        console.log('AAAAlAAAAAAAA', this._config.Pwms);
+
         this._config.Pwms.forEach((io) =>
         {
             const pwm = new PwmIO(io);
-
+console.log(io);
             this.pwms.push(pwm);
         });
+        console.log(this.pwms);
     }
 
     public async SetValue(name: string, value: number): Promise<void>

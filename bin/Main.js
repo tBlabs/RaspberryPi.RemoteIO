@@ -39,9 +39,10 @@ let Main = class Main {
         this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
         try {
             await this._outputs.Init();
+            await this._pwms.Init();
         }
         catch (error) {
-            this.problems.push("⚡ Could not load IO driver on this machine. Node onoff lib works only on Raspberry Pi.");
+            this.problems.push("⚡ Could not load IO driver on this machine. onoff and pigpio libraries works only on Raspberry Pi.");
         }
         this._server.OnQuery('/', (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi driver via Http")
