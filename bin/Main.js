@@ -18,6 +18,7 @@ const Host_1 = require("./Host");
 const Outputs_1 = require("./Outputs");
 const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
+const pigpio_1 = require("pigpio");
 let Main = class Main {
     constructor(_config, _log, _server, _outputs) {
         this._config = _config;
@@ -27,6 +28,18 @@ let Main = class Main {
         this.problems = []; // TODO: to trzeba przekuć w jakąś klasę...
     }
     async Start() {
+        // const Gpio = require('pigpio').Gpio;
+        console.log('start');
+        const led = new pigpio_1.Gpio(25, { mode: pigpio_1.Gpio.OUTPUT });
+        let dutyCycle = 0;
+        setInterval(() => {
+            led.pwmWrite(dutyCycle);
+            dutyCycle += 5;
+            console.log(dutyCycle);
+            if (dutyCycle > 255) {
+                dutyCycle = 0;
+            }
+        }, 20);
         try {
             await this._config.Init();
         }

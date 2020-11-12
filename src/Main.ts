@@ -6,6 +6,7 @@ import { Outputs } from './Outputs';
 import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
+import { Gpio } from 'pigpio';
 
 @injectable()
 export class Main
@@ -20,7 +21,26 @@ export class Main
     private problems: string[] = []; // TODO: to trzeba przekuć w jakąś klasę...
 
     public async Start(): Promise<void>
-    {  
+    {
+
+        // const Gpio = require('pigpio').Gpio;
+console.log('start');
+        const led = new Gpio(25, { mode: Gpio.OUTPUT });
+
+        let dutyCycle = 0;
+
+        setInterval(() =>
+        {
+            led.pwmWrite(dutyCycle);
+
+            dutyCycle += 5;
+            console.log(dutyCycle);
+            if (dutyCycle > 255)
+            {
+                dutyCycle = 0;
+            }
+        }, 20);
+
         try
         {
             await this._config.Init();
@@ -29,15 +49,15 @@ export class Main
         {
             this.problems.push(`⚡ Could not load configuration from "${this._config.ConfigFileDir}" file.`);
         }
-        
+
         this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
-  
+
         try
         {
             await this._outputs.Init();
         }
         catch (error)
-        { 
+        {
             this.problems.push("⚡ Could not load IO driver on this machine. Node onoff lib works only on Raspberry Pi.");
         }
 
