@@ -35,13 +35,10 @@ let Pwms = class Pwms {
         this.pwms = [];
     }
     Init() {
-        console.log('AAAAlAAAAAAAA', this._config.Pwms);
         this._config.Pwms.forEach((io) => {
             const pwm = new PwmIO(io);
-            console.log(io);
             this.pwms.push(pwm);
         });
-        console.log(this.pwms);
     }
     async SetValue(name, value) {
         this._log.Trace(`Setting pwm "${name}" duty value to ${value}...`);

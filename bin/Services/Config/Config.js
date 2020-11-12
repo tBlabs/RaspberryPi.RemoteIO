@@ -24,10 +24,8 @@ let Config = class Config {
         try {
             const configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
             this.config = JSON.parse(configAsString);
-            console.log(this.config);
         }
         catch (error) {
-            console.log(error);
             throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start?`);
         }
     }
