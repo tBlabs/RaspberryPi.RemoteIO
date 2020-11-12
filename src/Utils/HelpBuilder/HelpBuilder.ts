@@ -1,4 +1,4 @@
-
+    
 export class HelpBuilder
 {
     private warnings: string[] = [];
@@ -8,7 +8,7 @@ export class HelpBuilder
     private apis: { url: string; purpose: string; }[] = [];
     private requirements: { key: string; value: string; }[] = [];
 
-    constructor(private appName: string, private description?: string)
+    constructor(private appName: string, private description: string = "")
     { }
 
     public Warning(texts: string[]): this
@@ -144,19 +144,19 @@ export class HelpBuilder
         </style>`;
     }
 
-    private Header(text: string)
+    private Header(text: string): string
     {
         return `<p>${text}</p>`;
     }
 
-    private Section(header, text)
+    private Section(header: string, text: string): string
     {
         if (text.length === 0) return "";
 
         return this.Header(header) + text + this.LineBreak;
     }
 
-    private Description(text)
+    private Description(text: string): string
     {
         if (text === undefined || text.length === 0) return "";
 

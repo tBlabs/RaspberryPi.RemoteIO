@@ -18,32 +18,35 @@ let Config = class Config {
     constructor(_args, _fs) {
         this._args = _args;
         this._fs = _fs;
-        this.configFileName = "config.json";
-    }
-    get Port() {
-        return this._args.Args.port || this.config.port || 8000;
-    }
-    get Outputs() {
-        return this.config.outputs;
-    }
-    get LogsLevel() {
-        if (this._args.Args.logsLevel !== undefined)
-            return +this._args.Args.logsLevel;
-        if (this.config.logsLevel !== undefined)
-            return this.config.logsLevel;
-        return 1;
-    }
-    get ConfigFileName() {
-        return this.configFileName;
+        this.CONFIG_FILE_DIR = "/home/pi/RaspberryPi.RemoteIO/config.json";
     }
     async Init() {
         try {
-            const configAsString = await this._fs.ReadFile("/home/pi/RaspberryPi.RemoteIO/" + this.configFileName);
+            const configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
             this.config = JSON.parse(configAsString);
         }
         catch (error) {
-            throw new Error('COULD NOT LOAD CONFIG.');
+            throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start?`);
         }
+    }
+    get Port() {
+        var _a;
+        return this._args.Args.port || ((_a = this.config) === null || _a === void 0 ? void 0 : _a.port) || 8000;
+    }
+    get Outputs() {
+        var _a;
+        return ((_a = this.config) === null || _a === void 0 ? void 0 : _a.outputs) || [];
+    }
+    get LogsLevel() {
+        var _a;
+        if (this._args.Args.logsLevel !== undefined)
+            return +this._args.Args.logsLevel;
+        if (((_a = this.config) === null || _a === void 0 ? void 0 : _a.logsLevel) !== undefined)
+            return this.config.logsLevel;
+        return 1;
+    }
+    get ConfigFileDir() {
+        return this.CONFIG_FILE_DIR;
     }
 };
 Config = __decorate([

@@ -1,0 +1,30 @@
+export declare class HelpBuilder {
+    private appName;
+    private description;
+    private warnings;
+    private glossaries;
+    private configs;
+    private statuses;
+    private apis;
+    private requirements;
+    constructor(appName: string, description?: string);
+    Warning(texts: string[]): this;
+    Glossary(key: string, value: string): this;
+    Requirement(key: string, value: string): this;
+    Config(key: string, value?: string, defaultValue?: string, example?: string, source?: string): this;
+    Status(key: string, callback: () => string): this;
+    Api(url: string, purpose: string): this;
+    private NewLine;
+    private LineBreak;
+    private get Glossaries();
+    private get Configs();
+    private get Statuses();
+    private get Apis();
+    private get Requirements();
+    get Styles(): string;
+    private Header;
+    private Section;
+    private Description;
+    private get Warnings();
+    ToString(): string;
+}

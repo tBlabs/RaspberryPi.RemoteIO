@@ -2,12 +2,7 @@ import { injectable, inject } from 'inversify';
 import { Types } from '../../IoC/Types';
 import { ILogger } from '../Logger/ILogger';
 import { IShell } from '../RemoteShell/IShell';
-
-export interface IFileSystem
-{
-    WriteFile(fileName: string, data: string): Promise<void>;
-    ReadFile(fileName: string): Promise<string>;
-}
+import { IFileSystem } from './IFileSystem';
 
 @injectable()
 export class RemoteFs implements IFileSystem

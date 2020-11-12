@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../IoC/Types";
-import { IFileSystem } from "../RemoteFs/RemoteFs";
+import { IFileSystem } from "../RemoteFs/IFileSystem";
 import { Output } from "../../Output";
 import { IStartupArgs } from "../Environment/IStartupArgs";
 
@@ -16,14 +16,27 @@ export interface IConfig
     LogsLevel: number;
     Port: number;
     Outputs: Output[];
-    ConfigFileName: string;
+    ConfigFileDir: string;
     Init(): Promise<void>;
 }
 
 @injectable()
 export class Config implements IConfig
 {
-    private configFileName = "config.json";
+    private CONFIG_FILE_DIR = "/home/pi/RaspberryPi.RemoteIO/config.json";
+
+    public async Init(): Promise<void>
+    {
+        try 
+        {
+            const configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
+            this.config = JSON.parse(configAsString);
+        } 
+        catch (error)
+        {
+            throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start?`);
+        }
+    }
 
     constructor(
         @inject(Types.IStartupArgs) private _args: IStartupArgs,
@@ -34,12 +47,12 @@ export class Config implements IConfig
 
     public get Port(): number
     {
-        return this._args.Args.port || this.config.port || 8000;
+        return this._args.Args.port || this.config?.port || 8000;
     }
 
     public get Outputs(): Output[]
     {
-        return this.config.outputs;
+        return this.config?.outputs || [];
     }
 
     public get LogsLevel(): number // || operator cannot be used here because it treats 0 as no value
@@ -47,27 +60,14 @@ export class Config implements IConfig
         if (this._args.Args.logsLevel !== undefined)
             return +this._args.Args.logsLevel;
 
-        if (this.config.logsLevel !== undefined)
+        if (this.config?.logsLevel !== undefined)
             return this.config.logsLevel;
         
         return 1;
     }
 
-    public get ConfigFileName(): string
+    public get ConfigFileDir(): string
     {
-        return this.configFileName;
-    }
-
-    public async Init(): Promise<void>
-    {
-        try 
-        {
-            const configAsString = await this._fs.ReadFile("/home/pi/RaspberryPi.RemoteIO/" + this.configFileName);
-            this.config = JSON.parse(configAsString);
-        } 
-        catch (error)
-        {
-            throw new Error('COULD NOT LOAD CONFIG.');
-        }
+        return this.CONFIG_FILE_DIR;
     }
 }

@@ -13,10 +13,11 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
-const HelpBuilder_1 = require("./HelpBuilder");
+// import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 const Host_1 = require("./Host");
 const Outputs_1 = require("./Outputs");
 const Types_1 = require("./IoC/Types");
+const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
 let Main = class Main {
     constructor(_config, _log, _server, _outputs) {
         this._config = _config;
@@ -31,7 +32,7 @@ let Main = class Main {
         }
         catch (error) // TODO: może warto wsadzić to w metodę?
          {
-            this.problems.push("⚡ Could not load configuration from config.json file.");
+            this.problems.push(`⚡ Could not load configuration from "${this._config.ConfigFileDir}" file.`);
         }
         this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
         try {
@@ -43,14 +44,15 @@ let Main = class Main {
         this._server.OnQuery('/', (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi driver via Http")
                 .Warning(this.problems)
+                .Config("USE_REMOTE_SHELL", process.env.USE_REMOTE_SHELL ? "true" : "false", "empty", "USE_REMOTE_SHELL={empty or anything}", 'Environment variable process.env (".env" file)')
                 .Config("REMOTE_SHELL", process.env.REMOTE_SHELL, "empty", "REMOTE_SHELL=http://192.168.43.229:3000", 'Environment variable process.env (".env" file)')
-                .Config("port", this._config.Port.toString(), "8000", "1234 (number value)", this._config.ConfigFileName)
-                .Config("outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`, this._config.ConfigFileName)
-                .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileName}`)
+                .Config("port", this._config.Port.toString(), "8000", "1234 (number value)", this._config.ConfigFileDir)
+                .Config("outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`, this._config.ConfigFileDir)
+                .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileDir}`)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
                 .Requirement('Active "Remote Shell" utility', 'Is necessary to download config file. (fs module may be used instead /IFileSystem/).')
-                .Requirement('Config file "config.json"', 'Is necessary to start the app. Defines server port and IO configuration.');
+                .Requirement(`Config file "config.json" in "${this._config.ConfigFileDir}"`, 'Is necessary to start the app. Defines server port and IO configuration.');
             res.send(help.ToString());
         });
         this._server.OnCommand('/set/output/:name/:value', params => {

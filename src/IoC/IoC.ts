@@ -19,8 +19,10 @@ import { ConsoleOutput } from '../Services/Logger/ConsoleOutput';
 import { ILoggerOutput } from "../Services/Logger/ILoggerOutput";
 import { IShell } from '../Services/RemoteShell/IShell';
 import { RemoteShell } from '../Services/RemoteShell/RemoteShell';
-import { IFileSystem, RemoteFs } from '../Services/RemoteFs/RemoteFs';
+import { RemoteFs } from '../Services/RemoteFs/RemoteFs';
+import { IFileSystem } from "../Services/RemoteFs/IFileSystem";
 import { Outputs } from '../Outputs';
+import { FileSystem } from '../Services/RemoteFs/FileSystem';
 
 const IoC = new Container();
 
@@ -30,7 +32,6 @@ try
     IoC.bind<IRunMode>(Types.IRunMode).to(RunMode).inSingletonScope().whenTargetIsDefault();
     IoC.bind<ILogger>(Types.ILogger).to(Logger).inSingletonScope().whenTargetIsDefault();
     IoC.bind<IShell>(Types.IShell).to(RemoteShell).inTransientScope().whenTargetIsDefault();
-    IoC.bind<IFileSystem>(Types.IFileSystem).to(RemoteFs).inTransientScope().whenTargetIsDefault();
     IoC.bind<ILoggerOutput>(Types.ILoggerOutput).to(ConsoleOutput).inTransientScope().whenTargetIsDefault();
     IoC.bind<IStartupArgs>(Types.IStartupArgs).to(StartupArgs).inSingletonScope().whenTargetIsDefault();
     IoC.bind<IDateTimeProvider>(Types.IDateTimeProvider).to(DateTimeProvider).inTransientScope().whenTargetIsDefault();
@@ -39,6 +40,16 @@ try
     IoC.bind<IConfig>(Types.IConfig).to(Config).inSingletonScope().whenTargetIsDefault();
     IoC.bind<Host>(Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Outputs>(Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    if (process.env.USE_REMOTE_SHELL)
+    {
+        // console.log('Using RemoteShell');
+        IoC.bind<IFileSystem>(Types.IFileSystem).to(RemoteFs).inTransientScope().whenTargetIsDefault();
+    }
+    else  
+    { 
+        // console.log('Using internal Shell');
+        IoC.bind<IFileSystem>(Types.IFileSystem).to(FileSystem).inTransientScope().whenTargetIsDefault();
+    }
 }
 catch (ex)
 {
