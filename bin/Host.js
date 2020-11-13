@@ -17,7 +17,6 @@ const express = require("express");
 const cors = require("cors");
 const Types_1 = require("./IoC/Types");
 const SocketIoHost = require("socket.io");
-// import { Socket } from 'socket.io';
 const http = require("http");
 const Clients_1 = require("./Clients");
 let Host = class Host {
@@ -29,16 +28,15 @@ let Host = class Host {
         this.expressServer.use(cors());
         this.httpServer = http.createServer(this.expressServer);
         const socketHost = SocketIoHost(this.httpServer);
-        console.log('SOCKET REG');
         socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${e}`));
         socketHost.on('connection', (socket) => {
-            // console.log('ADDING NEW CLIENT', socket.id);
+            _log.Log(`New socket client connection ${socket.id}`);
             this.clients.Add(socket);
         });
         this.expressServer.get('/ping', (req, res) => res.send('pong'));
     }
     SendToAllClients(eventName, ...args) {
-        this.clients.SendToAll(eventName, args);
+        this.clients.SendToAll(eventName, ...args);
     }
     OnCommand(url, callback) {
         this.expressServer.get(url, (req, res) => {

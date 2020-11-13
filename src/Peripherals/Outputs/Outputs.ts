@@ -18,7 +18,6 @@ export class Outputs implements IDisposable
 
     public Init(): void
     {
-        console.log(this._config.Outputs);
         this._config.Outputs.forEach((o) =>
         {
             const output = new OutputIO(o);

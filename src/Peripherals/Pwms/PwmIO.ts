@@ -1,36 +1,82 @@
+import { rejects } from 'assert';
 import { Gpio } from 'pigpio';
+import { ILogger } from '../../Services/Logger/ILogger';
 import { PwmConfigEntry } from './PwmConfigEntry';
-
 
 export class PwmIO
 {
     public readonly Name: string;
-    public readonly IO: Gpio;
+    public readonly IO!: Gpio;
 
-    constructor(entry: PwmConfigEntry)
+    constructor(private _log: ILogger, entry: PwmConfigEntry)
     {
-        console.log(`Registering "${entry.name}"...`);
+        _log.Log(`Registering "${entry.name}"...`);
 
         this.Name = entry.name;
 
         try
         {
             this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
-            console.log("Registered.");
+
+            _log.Log("Registered.");
         }
         catch (error)
         {
-            console.log(`Registering error:`, error.message);
+            _log.Error(`Registering error: ${error.message}. Is app running at Raspberry Pi?`);
         }
     }
 
-    public async Set(dutyCycle: number): Promise<void>
+    public Set(dutyCycle: number): void
     {
-        return new Promise((resolve) =>
+        try
         {
+            this._log.Trace(`Setting pwm "${name}" duty value to ${dutyCycle}...`);
+
+            if (dutyCycle < 0 || dutyCycle > 255)
+            {
+                throw new Error(`Duty cycle out of range (0-255). ${dutyCycle} was given.`);
+            }
+
             this.IO.pwmWrite(dutyCycle);
 
-            resolve();
-        });
+            this._log.Trace(`"${name}" set to ${dutyCycle}.`);
+        }
+        catch (error)
+        {
+            this._log.Error('PWM duty cycle write problem:', error);
+        }
     }
 }
+
+// export class PwmIO
+// {
+//     public readonly Name: string;
+//     public readonly IO!: Gpio;
+
+//     constructor(entry: PwmConfigEntry)
+//     {
+//         console.log(`Registering "${entry.name}"...`);
+
+//         this.Name = entry.name;
+
+//         try
+//         {
+//             this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
+//             console.log("Registered.");
+//         }
+//         catch (error)
+//         {
+//             console.log(`Registering error:`, error.message);
+//         }
+//     }
+
+//     public async Set(dutyCycle: number): Promise<void>
+//     {
+//         return new Promise((resolve) =>
+//         {
+//             this.IO.pwmWrite(dutyCycle);
+
+//             resolve();
+//         });
+//     }
+// }

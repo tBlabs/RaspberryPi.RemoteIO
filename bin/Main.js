@@ -13,7 +13,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
-// import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 const Host_1 = require("./Host");
 const Outputs_1 = require("./Peripherals/Outputs/Outputs");
 const Types_1 = require("./IoC/Types");
@@ -31,22 +30,36 @@ let Main = class Main {
         this.problems = [];
     }
     async Start() {
-        try {
-            await this._config.Init();
-        }
-        catch (error) {
-            console.log('Could not load config');
-            this.problems.push(`⚡ Could not load configuration: ${error}`);
-        }
-        this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
-        try {
-            await this._outputs.Init();
-            await this._pwms.Init();
-            await this._inputs.Init();
-        }
-        catch (error) {
-            this.problems.push("⚡ Could not load IO driver on this machine. onoff and pigpio libraries works only on Raspberry Pi.");
-        }
+        await this.LoadConfiguration();
+        await this.InitIo();
+        this.RegisterDigitalOutputsHandlers();
+        this.RegisterAnalogOutputsHandlers();
+        this.RegisterDigitalInputsHandlers();
+        this.RegisterHelpHandler();
+        this.EngageHeartbeat();
+        this._server.Start();
+        this.RegisterSigInt();
+    }
+    RegisterSigInt() {
+        process.on('SIGINT', () => {
+            this._log.Error('SIGINT detected. Closing server & disposing IO...');
+            this._server.Dispose();
+            this._outputs.Dispose();
+        });
+    }
+    EngageHeartbeat() {
+        let i = 0;
+        setInterval(() => {
+            this._server.SendToAllClients('heartbeat', i);
+            i++;
+        }, 10 * 1000);
+    }
+    RegisterDigitalInputsHandlers() {
+        this._inputs.OnChange((name, value) => {
+            this._server.SendToAllClients('input-change', name, value);
+        });
+    }
+    RegisterHelpHandler() {
         this._server.OnQuery('/', (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi driver via Http")
                 .Warning(this.problems)
@@ -57,33 +70,45 @@ let Main = class Main {
                 .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileDir}`)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
-                .Api('/set/pwm/:name/:value', `Set specified Pwm IO to given value (from 0 to 255)`)
+                .Api('/set/pwm/:name/:value', `Set specified PWM IO to given value (from 0 to 255)`)
                 .Requirement('Active "Remote Shell" utility', 'Is necessary to download config file. (fs module may be used instead /IFileSystem/).')
                 .Requirement(`Config file "config.json" in "${this._config.ConfigFileDir}"`, 'Is necessary to start the app. Defines server port and IO configuration.');
             res.send(help.ToString());
         });
-        this._server.OnCommand('/set/output/:name/:value', params => {
-            this._outputs.SetValue(params.name, +params.value);
-        });
-        this._server.OnQuery('/get/output/:name/value', (req, res) => { var _a; return res.send(((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || ""); });
+    }
+    RegisterAnalogOutputsHandlers() {
         this._server.OnCommand('/set/pwm/:name/:value', params => {
             this._pwms.SetValue(params.name, +params.value);
         });
-        this._inputs.OnChange((name, value) => {
-            // console.log('MAIN INPUT ON CHANGE', name, value);
-            this._server.SendToAllClients('input-change', name, value);
+    }
+    RegisterDigitalOutputsHandlers() {
+        this._server.OnCommand('/set/output/:name/:value', async (params) => {
+            await this._outputs.SetValue(params.name, +params.value);
         });
-        let i = 0;
-        setInterval(() => {
-            this._server.SendToAllClients('isalive', i);
-            i = 1 - i;
-        }, 1000);
-        this._server.Start();
-        process.on('SIGINT', () => {
-            console.log('SIGINT detected. Closing server & disposing IO...');
-            this._server.Dispose();
-            this._outputs.Dispose();
+        this._server.OnQuery('/get/output/:name/value', async (req, res) => {
+            var _a;
+            res.send(await ((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || "");
         });
+    }
+    async InitIo() {
+        try {
+            await this._outputs.Init();
+            await this._pwms.Init();
+            await this._inputs.Init();
+        }
+        catch (error) {
+            this.problems.push("⚡ Could not load IO driver on this machine. onoff and pigpio libraries works only on Raspberry Pi.");
+        }
+    }
+    async LoadConfiguration() {
+        try {
+            await this._config.Init();
+            this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
+        }
+        catch (error) {
+            this._log.Error('Could not load config');
+            this.problems.push(`⚡ Could not load configuration: ${error}`);
+        }
     }
 };
 Main = __decorate([

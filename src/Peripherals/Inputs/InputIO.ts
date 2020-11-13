@@ -39,10 +39,7 @@ export class InputIO
             });
 
             this.IO.on('interrupt', (level) =>
-            // let level = 0; setInterval( ()=>
             {
-                // level = 1-level;
-                // console.log('L', level);
                 if (this.state !== level)
                 {
                     console.log('INTERR', this.state, level);
@@ -51,7 +48,6 @@ export class InputIO
                     this.OnStateChange?.(this.state);
                 }
             });
-            // }, 1000);
             console.log("Registered.");
         } 
         catch (error)

@@ -20,6 +20,7 @@ const Outputs_1 = require("../Peripherals/Outputs/Outputs");
 const FileSystem_1 = require("../Services/RemoteFs/FileSystem");
 const PwmOutputs_1 = require("../Peripherals/Pwms/PwmOutputs");
 const Inputs_1 = require("../Peripherals/Inputs/Inputs");
+const PwmIoFactory_1 = require("../Peripherals/Pwms/PwmIoFactory");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
@@ -36,6 +37,7 @@ try {
     IoC.bind(Host_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Inputs_1.Inputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(PwmIoFactory_1.PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL) {
         console.log('Using RemoteShell');

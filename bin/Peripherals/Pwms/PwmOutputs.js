@@ -14,37 +14,35 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
-const PwmIO_1 = require("./PwmIO");
+const PwmIoFactory_1 = require("./PwmIoFactory");
 let Pwms = class Pwms {
-    constructor(_config, _log) {
+    constructor(_pwmIoFactory, _config, _log) {
+        this._pwmIoFactory = _pwmIoFactory;
         this._config = _config;
         this._log = _log;
         this.pwms = [];
     }
     Init() {
         this._config.Pwms.forEach((io) => {
-            const pwm = new PwmIO_1.PwmIO(io);
+            // const pwm = new PwmIO(io);
+            const pwm = this._pwmIoFactory.Create(io);
             this.pwms.push(pwm);
         });
     }
     async SetValue(name, value) {
-        this._log.Trace(`Setting pwm "${name}" duty value to ${value}...`);
         const io = this.pwms.find(x => x.Name === name);
         if (io === undefined) {
-            this._log.Trace(`IO not found`);
+            this._log.Error(`IO not found`);
             throw new Error(`IO "${name}" not found.`);
         }
-        else {
-            await io.Set(+value);
-            this._log.Trace(`"${name}" set to ${value}.`);
-        }
+        await io.Set(+value);
     }
 };
 Pwms = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject(Types_1.Types.IConfig)),
-    __param(1, inversify_1.inject(Types_1.Types.ILogger)),
-    __metadata("design:paramtypes", [Object, Object])
+    __param(1, inversify_1.inject(Types_1.Types.IConfig)),
+    __param(2, inversify_1.inject(Types_1.Types.ILogger)),
+    __metadata("design:paramtypes", [PwmIoFactory_1.PwmIoFactory, Object, Object])
 ], Pwms);
 exports.Pwms = Pwms;
 //# sourceMappingURL=PwmOutputs.js.map

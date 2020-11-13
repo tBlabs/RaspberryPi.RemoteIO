@@ -6,13 +6,10 @@ export class Clients
 
     public Add(socket: Socket): void
     {
-        console.log('Client connected', socket.id);
-
         this.clients.push(socket);
 
         socket.on('disconnect', () =>
         {
-            console.log('Client disconnected', socket.id);
             this.Remove(socket);
         });
     }
@@ -26,10 +23,8 @@ export class Clients
 
     public SendToAll(event: string, ...args: any[]): void
     {
-        // console.log('STA', this.clients.length);
         this.clients.forEach((socket: Socket) =>
         {
-            // console.log('sending to', socket.id);
             socket.emit(event, ...args);
         });
     }

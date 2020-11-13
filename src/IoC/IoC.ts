@@ -25,6 +25,7 @@ import { Outputs } from '../Peripherals/Outputs/Outputs';
 import { FileSystem } from '../Services/RemoteFs/FileSystem';
 import { Pwms } from '../Peripherals/Pwms/PwmOutputs';
 import { Inputs } from '../Peripherals/Inputs/Inputs';
+import { PwmIoFactory } from "../Peripherals/Pwms/PwmIoFactory";
 
 const IoC = new Container();
 
@@ -43,6 +44,7 @@ try
     IoC.bind<Host>(Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Inputs>(Inputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Outputs>(Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<PwmIoFactory>(PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Pwms>(Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL)
     {

@@ -39,15 +39,12 @@ class InputIO {
             });
             this.IO.on('interrupt', (level) => {
                 var _a;
-                // level = 1-level;
-                // console.log('L', level);
                 if (this.state !== level) {
                     console.log('INTERR', this.state, level);
                     this.state = level;
                     (_a = this.OnStateChange) === null || _a === void 0 ? void 0 : _a.call(this, this.state);
                 }
             });
-            // }, 1000);
             console.log("Registered.");
         }
         catch (error) {

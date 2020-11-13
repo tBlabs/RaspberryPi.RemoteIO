@@ -14,30 +14,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
-const InputIO_1 = require("./InputIO");
-let Inputs = class Inputs {
-    constructor(_config, _log) {
-        this._config = _config;
+const PwmIO_1 = require("./PwmIO");
+let PwmIoFactory = class PwmIoFactory {
+    constructor(_log) {
         this._log = _log;
     }
-    async Init() {
-        this._config.Inputs.forEach(io => {
-            const input = new InputIO_1.InputIO(io);
-            input.OnStateChange = (state) => {
-                var _a;
-                (_a = this.callback) === null || _a === void 0 ? void 0 : _a.call(this, input.Name, state);
-            };
-        });
-    }
-    OnChange(callback) {
-        this.callback = callback;
+    Create(entry) {
+        const io = new PwmIO_1.PwmIO(this._log, entry);
+        return io;
     }
 };
-Inputs = __decorate([
+PwmIoFactory = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject(Types_1.Types.IConfig)),
-    __param(1, inversify_1.inject(Types_1.Types.ILogger)),
-    __metadata("design:paramtypes", [Object, Object])
-], Inputs);
-exports.Inputs = Inputs;
-//# sourceMappingURL=Inputs.js.map
+    __param(0, inversify_1.inject(Types_1.Types.ILogger)),
+    __metadata("design:paramtypes", [Object])
+], PwmIoFactory);
+exports.PwmIoFactory = PwmIoFactory;
+//# sourceMappingURL=PwmIoFactory.js.map

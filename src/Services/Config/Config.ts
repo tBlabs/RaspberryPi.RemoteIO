@@ -3,7 +3,6 @@ import { Types } from "../../IoC/Types";
 import { IFileSystem } from "../RemoteFs/IFileSystem";
 import { OutputConfigEntry } from "../../Peripherals/Outputs/OutputConfigEntry";
 import { IStartupArgs } from "../Environment/IStartupArgs";
-import { Pwms } from "../../Peripherals/Pwms/PwmOutputs";
 import { PwmConfigEntry } from "../../Peripherals/Pwms/PwmConfigEntry";
 import { InputConfigEntry } from "../../Peripherals/Inputs/InputConfigEntry";
 

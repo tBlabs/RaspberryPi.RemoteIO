@@ -7,7 +7,6 @@ import { Express } from 'express-serve-static-core';
 import { Server } from 'http';
 import { IConfig } from './Services/Config/Config';
 import * as SocketIoHost from 'socket.io';
-// import { Socket } from 'socket.io';
 import * as http from 'http';
 import { Clients } from './Clients';
 
@@ -17,7 +16,7 @@ export class Host
     httpServer: Server;
     public SendToAllClients(eventName: string, ...args: any): void
     {
-        this.clients.SendToAll(eventName, args);
+        this.clients.SendToAll(eventName, ...args);
     }
 
     private expressServer: Express;
@@ -33,12 +32,12 @@ export class Host
         this.httpServer = http.createServer(this.expressServer);
         const socketHost = SocketIoHost(this.httpServer);
 
-        console.log('SOCKET REG');
         socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${ e }`));
 
         socketHost.on('connection', (socket) =>
         {
-            // console.log('ADDING NEW CLIENT', socket.id);
+            _log.Log(`New socket client connection ${socket.id}`);
+
             this.clients.Add(socket);
         });
 

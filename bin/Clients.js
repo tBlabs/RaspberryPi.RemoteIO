@@ -5,10 +5,8 @@ class Clients {
         this.clients = [];
     }
     Add(socket) {
-        console.log('Client connected', socket.id);
         this.clients.push(socket);
         socket.on('disconnect', () => {
-            console.log('Client disconnected', socket.id);
             this.Remove(socket);
         });
     }
@@ -17,9 +15,7 @@ class Clients {
         this.clients.splice(clientIndex, 1);
     }
     SendToAll(event, ...args) {
-        // console.log('STA', this.clients.length);
         this.clients.forEach((socket) => {
-            // console.log('sending to', socket.id);
             socket.emit(event, ...args);
         });
     }
