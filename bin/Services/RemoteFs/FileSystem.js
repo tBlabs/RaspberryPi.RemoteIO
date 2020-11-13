@@ -9,18 +9,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const fs = require("fs");
 let FileSystem = class FileSystem {
-    async WriteFile(fileName, data) {
+    async WriteFile(fileDir, data) {
         return new Promise((resolve, reject) => {
-            fs.writeFile(fileName, data, (err) => {
+            fs.writeFile(fileDir, data, (err) => {
                 if (err)
                     reject("Could not save file.");
                 resolve();
             });
         });
     }
-    async ReadFile(fileName) {
+    async ReadFile(fileDir) {
         return new Promise((resolve, reject) => {
-            fs.readFile(fileName, (err, data) => {
+            fs.readFile(fileDir, (err, data) => {
                 if (err)
                     reject("Could not read file.");
                 resolve(data === null || data === void 0 ? void 0 : data.toString());

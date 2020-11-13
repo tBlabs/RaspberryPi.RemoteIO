@@ -5,11 +5,11 @@ import * as fs from 'fs';
 @injectable()
 export class FileSystem implements IFileSystem
 {
-    public async WriteFile(fileName: string, data: string): Promise<void>
+    public async WriteFile(fileDir: string, data: string): Promise<void>
     {
         return new Promise((resolve, reject) =>
         {
-            fs.writeFile(fileName, data, (err) =>
+            fs.writeFile(fileDir, data, (err) =>
             {
                 if (err)
                     reject("Could not save file.");
@@ -19,11 +19,11 @@ export class FileSystem implements IFileSystem
         });
     }
 
-    public async ReadFile(fileName: string): Promise<string>
+    public async ReadFile(fileDir: string): Promise<string>
     {
         return new Promise((resolve, reject) =>
         {
-            fs.readFile(fileName, (err, data) =>
+            fs.readFile(fileDir, (err, data) =>
             {
                 if (err)
                     reject("Could not read file.");

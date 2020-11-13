@@ -31,7 +31,7 @@ export class Main
         }
         catch (error) // TODO: może warto wsadzić to w metodę?
         {
-            this.problems.push(`⚡ Could not load configuration from "${this._config.ConfigFileDir}" file.`);
+            this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
 
         this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
@@ -78,7 +78,7 @@ export class Main
 
         this._inputs.OnChange((name, value) =>
         {
-            console.log(name, value);
+            console.log('MAIN INPUT ON CHANGE', name, value);
             this._server.SendToAllClients('input-change', name, value);
         });
 

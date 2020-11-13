@@ -31,6 +31,11 @@ export class Config implements IConfig
 {
     private CONFIG_FILE_DIR = "/home/pi/RaspberryPi.RemoteIO/config.json";
 
+    constructor(
+        @inject(Types.IStartupArgs) private _args: IStartupArgs,
+        @inject(Types.IFileSystem) private _fs: IFileSystem)
+    { }
+
     public async Init(): Promise<void>
     {
         try 
@@ -43,11 +48,6 @@ export class Config implements IConfig
             throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start?`);
         }
     }
-
-    constructor(
-        @inject(Types.IStartupArgs) private _args: IStartupArgs,
-        @inject(Types.IFileSystem) private _fs: IFileSystem)
-    { }
 
     private config!: RawConfig;
 
