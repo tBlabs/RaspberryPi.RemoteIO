@@ -2,9 +2,9 @@ import { OutputConfigEntry } from "../../Peripherals/DigitalOutputs/DigitalOutpu
 import { PwmConfigEntry } from "../../Peripherals/Pwms/PwmConfigEntry";
 import { DigitalInputConfigEntry } from "../../Peripherals/DigitalInputs/DigitalInputConfigEntry";
 
-
 export interface IConfig
 {
+    Raw: string;
     LogsLevel: number;
     Port: number;
     Inputs: DigitalInputConfigEntry[];

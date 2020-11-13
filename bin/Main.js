@@ -102,8 +102,10 @@ let Main = class Main {
     }
     async LoadConfiguration() {
         try {
+            this._log.Log(`Loading config...`); // This probably won't work because log.SetLogLevel is after config load
             await this._config.Init();
             this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
+            this._log.Trace(`Config loaded:`, this._config.Raw);
         }
         catch (error) {
             this._log.Error('Could not load config', error.message);

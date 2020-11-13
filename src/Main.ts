@@ -128,9 +128,13 @@ export class Main
     {
         try
         {
-            await this._config.Init();
+            this._log.Log(`Loading config...`); // This probably won't work because log.SetLogLevel is after config load
 
+            await this._config.Init();
+            
             this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
+                
+            this._log.Trace(`Config loaded:`, this._config.Raw);
         }
         catch (error)
         {

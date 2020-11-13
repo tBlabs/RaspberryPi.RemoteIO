@@ -22,15 +22,21 @@ export class Config implements IConfig
     {
         try 
         {
-            const configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
+            this.configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
             this.config = JSON.parse(configAsString);
-        } 
+        }
         catch (error)
         {
             throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start? (this question is valid only in remote mode)`);
         }
     }
 
+    public get Raw(): string
+    {
+        return this.configAsString;
+    }
+
+    private configAsString: string = "(not loaded yet)";
     private config!: RawConfig;
 
     public get Port(): number
@@ -60,7 +66,7 @@ export class Config implements IConfig
 
         if (this.config?.logsLevel !== undefined)
             return this.config.logsLevel;
-        
+
         return 1;
     }
 

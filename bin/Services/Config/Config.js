@@ -19,15 +19,19 @@ let Config = class Config {
         this._args = _args;
         this._fs = _fs;
         this.CONFIG_FILE_DIR = "/home/pi/RaspberryPi.RemoteIO/config.json";
+        this.configAsString = "(not loaded yet)";
     }
     async Init() {
         try {
-            const configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
+            this.configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
             this.config = JSON.parse(configAsString);
         }
         catch (error) {
             throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start? (this question is valid only in remote mode)`);
         }
+    }
+    get Raw() {
+        return this.configAsString;
     }
     get Port() {
         var _a;
