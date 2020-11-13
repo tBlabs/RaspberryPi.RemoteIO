@@ -44,10 +44,9 @@ export class Main
     {
         process.on('SIGINT', () =>
         {
-            this._log.Error('SIGINT detected. Closing server & disposing IO...');
-
+            this._log.Error('SIGINT detected. Closing server...');
+            
             this._server.Dispose();
-            this._outputs.Dispose();
         });
     }
 
