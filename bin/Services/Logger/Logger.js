@@ -60,6 +60,7 @@ let Logger = class Logger {
         const str = params.map(this.ObjectToString).join(' ');
         this._output.Print(str);
     }
+    // TODO: to sobie nie radzi z obiektami typu Error!!!!!!!
     ObjectToString(obj) {
         if ((obj === null || obj === void 0 ? void 0 : obj.constructor) === String) {
             return obj.replace(/\n/g, '\\n')

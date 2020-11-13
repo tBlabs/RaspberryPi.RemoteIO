@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 import { Types } from '../../IoC/Types';
-import { IConfig } from '../../Services/Config/Config';
+import { IConfig } from "../../Services/Config/IConfig";
 import { ILogger } from '../../Services/Logger/ILogger';
 import { PwmIO } from './PwmIO';
 import { PwmIoFactory } from "./PwmIoFactory";

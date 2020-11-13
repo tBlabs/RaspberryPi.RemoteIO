@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 const Host_1 = require("./Host");
-const Outputs_1 = require("./Peripherals/Outputs/Outputs");
+const DigitalOutputs_1 = require("./Peripherals/DigitalOutputs/DigitalOutputs");
 const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
 const PwmOutputs_1 = require("./Peripherals/Pwms/PwmOutputs");
@@ -106,7 +106,7 @@ let Main = class Main {
             this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
         }
         catch (error) {
-            this._log.Error('Could not load config');
+            this._log.Error('Could not load config', error.message);
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
     }
@@ -118,7 +118,7 @@ Main = __decorate([
     __metadata("design:paramtypes", [Object, Object, Host_1.Host,
         DigitalInputs_1.DigitalInputs,
         PwmOutputs_1.Pwms,
-        Outputs_1.Outputs])
+        DigitalOutputs_1.DigitalOutputs])
 ], Main);
 exports.Main = Main;
 //# sourceMappingURL=Main.js.map

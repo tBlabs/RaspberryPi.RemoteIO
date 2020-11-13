@@ -3,7 +3,7 @@ import { ILogger } from './ILogger';
 import { injectable, inject } from 'inversify';
 import { Types } from '../../IoC/Types';
 import { ILoggerOutput } from "./ILoggerOutput";
-import { IConfig } from '../Config/Config';
+import { IConfig } from "../Config/IConfig";
 
 @injectable()
 export class Logger implements ILogger
@@ -64,6 +64,7 @@ export class Logger implements ILogger
         this._output.Print(str);
     }
 
+    // TODO: to sobie nie radzi z obiektami typu Error!!!!!!!
     private ObjectToString(obj: any): string
     {
         if (obj?.constructor === String)

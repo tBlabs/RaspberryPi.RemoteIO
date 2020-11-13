@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
-import { IConfig } from './Services/Config/Config';
+import { IConfig } from "./Services/Config/IConfig";
 import { Host } from './Host';
-import { Outputs } from './Peripherals/Outputs/Outputs';
+import { DigitalOutputs } from './Peripherals/DigitalOutputs/DigitalOutputs';
 import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
@@ -17,7 +17,7 @@ export class Main
         private _server: Host,
         private _inputs: DigitalInputs,
         private _pwms: Pwms,
-        private _outputs: Outputs)
+        private _outputs: DigitalOutputs)
     { }
 
     private problems: string[] = [];
@@ -124,7 +124,7 @@ export class Main
         }
     }
 
-    private async LoadConfiguration()
+    private async LoadConfiguration(): Promise<void>
     {
         try
         {
@@ -134,7 +134,7 @@ export class Main
         }
         catch (error)
         {
-            this._log.Error('Could not load config');
+            this._log.Error('Could not load config', error.message);
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
     }

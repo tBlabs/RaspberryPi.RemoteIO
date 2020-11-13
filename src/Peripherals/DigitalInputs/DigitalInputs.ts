@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../IoC/Types";
-import { IConfig } from "../../Services/Config/Config";
+import { IConfig } from "../../Services/Config/IConfig";
 import { ILogger } from "../../Services/Logger/ILogger";
 import { DigitalInputIoFactory } from "./DigitalInputIoFactory";
 

@@ -5,7 +5,7 @@ import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { Express } from 'express-serve-static-core';
 import { Server } from 'http';
-import { IConfig } from './Services/Config/Config';
+import { IConfig } from "./Services/Config/IConfig";
 import * as SocketIoHost from 'socket.io';
 import * as http from 'http';
 import { Clients } from './Clients';

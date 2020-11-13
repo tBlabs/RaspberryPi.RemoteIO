@@ -35,4 +35,4 @@ class DigitalOutputIO // implements IDisposable
     }
 }
 exports.DigitalOutputIO = DigitalOutputIO;
-//# sourceMappingURL=OutputIO.js.map
+//# sourceMappingURL=DigitalOutputIO.js.map

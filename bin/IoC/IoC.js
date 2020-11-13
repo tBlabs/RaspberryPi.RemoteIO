@@ -16,12 +16,13 @@ const Repeater_1 = require("../Services/Repeater/Repeater");
 const ConsoleOutput_1 = require("../Services/Logger/ConsoleOutput");
 const RemoteShell_1 = require("../Services/RemoteShell/RemoteShell");
 const RemoteFs_1 = require("../Services/RemoteFs/RemoteFs");
-const Outputs_1 = require("../Peripherals/Outputs/Outputs");
+const DigitalOutputs_1 = require("../Peripherals/DigitalOutputs/DigitalOutputs");
 const FileSystem_1 = require("../Services/RemoteFs/FileSystem");
 const PwmOutputs_1 = require("../Peripherals/Pwms/PwmOutputs");
 const DigitalInputs_1 = require("../Peripherals/DigitalInputs/DigitalInputs");
 const PwmIoFactory_1 = require("../Peripherals/Pwms/PwmIoFactory");
 const DigitalInputIoFactory_1 = require("../Peripherals/DigitalInputs/DigitalInputIoFactory");
+const DigitalOutputFactory_1 = require("../Peripherals/DigitalOutputs/DigitalOutputFactory");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
@@ -38,7 +39,8 @@ try {
     IoC.bind(Host_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(DigitalInputIoFactory_1.DigitalInputIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(DigitalInputs_1.DigitalInputs).toSelf().inSingletonScope().whenTargetIsDefault();
-    IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(DigitalOutputFactory_1.DigitalOutputFactory).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(DigitalOutputs_1.DigitalOutputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmIoFactory_1.PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL) {

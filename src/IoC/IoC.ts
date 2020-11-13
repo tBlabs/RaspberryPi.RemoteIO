@@ -13,7 +13,8 @@ import { Host } from "../Host";
 import { IStartupArgs } from '../Services/Environment/IStartupArgs';
 import { StartupArgs } from '../Services/Environment/StartupArgs';
 import { IDateTimeProvider, DateTimeProvider } from '../Services/DateTimeProvider/DateTimeProvider';
-import { Config, IConfig } from '../Services/Config/Config';
+import { Config } from '../Services/Config/Config';
+import { IConfig } from "../Services/Config/IConfig";
 import { Repeater } from '../Services/Repeater/Repeater';
 import { ConsoleOutput } from '../Services/Logger/ConsoleOutput';
 import { ILoggerOutput } from "../Services/Logger/ILoggerOutput";
@@ -21,12 +22,13 @@ import { IShell } from '../Services/RemoteShell/IShell';
 import { RemoteShell } from '../Services/RemoteShell/RemoteShell';
 import { RemoteFs } from '../Services/RemoteFs/RemoteFs';
 import { IFileSystem } from "../Services/RemoteFs/IFileSystem";
-import { Outputs } from '../Peripherals/Outputs/Outputs';
+import { DigitalOutputs } from '../Peripherals/DigitalOutputs/DigitalOutputs';
 import { FileSystem } from '../Services/RemoteFs/FileSystem';
 import { Pwms } from '../Peripherals/Pwms/PwmOutputs';
 import { DigitalInputs } from '../Peripherals/DigitalInputs/DigitalInputs';
 import { PwmIoFactory } from "../Peripherals/Pwms/PwmIoFactory";
 import { DigitalInputIoFactory } from '../Peripherals/DigitalInputs/DigitalInputIoFactory';
+import { DigitalOutputFactory } from '../Peripherals/DigitalOutputs/DigitalOutputFactory';
 
 const IoC = new Container();
 
@@ -45,7 +47,8 @@ try
     IoC.bind<Host>(Host).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<DigitalInputIoFactory>(DigitalInputIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<DigitalInputs>(DigitalInputs).toSelf().inSingletonScope().whenTargetIsDefault();
-    IoC.bind<Outputs>(Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<DigitalOutputFactory>(DigitalOutputFactory).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<DigitalOutputs>(DigitalOutputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<PwmIoFactory>(PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Pwms>(Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
 

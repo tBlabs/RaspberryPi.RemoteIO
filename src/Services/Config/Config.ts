@@ -1,30 +1,12 @@
 import { inject, injectable } from "inversify";
 import { Types } from "../../IoC/Types";
 import { IFileSystem } from "../RemoteFs/IFileSystem";
-import { OutputConfigEntry } from "../../Peripherals/Outputs/OutputConfigEntry";
+import { OutputConfigEntry } from "../../Peripherals/DigitalOutputs/DigitalOutputConfigEntry";
 import { IStartupArgs } from "../Environment/IStartupArgs";
 import { PwmConfigEntry } from "../../Peripherals/Pwms/PwmConfigEntry";
 import { DigitalInputConfigEntry } from "../../Peripherals/DigitalInputs/DigitalInputConfigEntry";
-
-export interface RawConfig
-{
-    port: number;
-    logsLevel: number;
-    inputs: DigitalInputConfigEntry[];
-    outputs: OutputConfigEntry[];
-    pwms: PwmConfigEntry[];
-}
-
-export interface IConfig
-{
-    LogsLevel: number;
-    Port: number;
-    Inputs: DigitalInputConfigEntry[];
-    Outputs: OutputConfigEntry[];
-    Pwms: PwmConfigEntry[];
-    ConfigFileDir: string;
-    Init(): Promise<void>;
-}
+import { IConfig } from "./IConfig";
+import { RawConfig } from "./RawConfig";
 
 @injectable()
 export class Config implements IConfig
@@ -45,7 +27,7 @@ export class Config implements IConfig
         } 
         catch (error)
         {
-            throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start?`);
+            throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start? (this question is valid only in remote mode)`);
         }
     }
 
@@ -60,7 +42,6 @@ export class Config implements IConfig
     {
         return this.config?.inputs || [];
     }
-
 
     public get Outputs(): OutputConfigEntry[]
     {

@@ -1,26 +1,28 @@
 import { BinaryValue } from 'onoff';
 import { inject, injectable } from 'inversify';
 import { IDisposable } from '../../IDisposable';
-import { IConfig } from '../../Services/Config/Config';
+import { IConfig } from "../../Services/Config/IConfig";
 import { Types } from '../../IoC/Types';
 import { ILogger } from '../../Services/Logger/ILogger';
-import { DigitalOutputIO } from './OutputIO';
+import { DigitalOutputIO } from './DigitalOutputIO';
+import { DigitalOutputFactory } from './DigitalOutputFactory';
 
 @injectable()
-export class Outputs implements IDisposable
+export class DigitalOutputs implements IDisposable
 {
     private outputs: DigitalOutputIO[] = [];
 
     constructor(
+        private _digitalOutputFactory: DigitalOutputFactory,
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger)
     { }
 
     public Init(): void
     {
-        this._config.Outputs.forEach((o) =>
+        this._config.Outputs.forEach((io) =>
         {
-            const output = new DigitalOutputIO(o);
+            const output = this._digitalOutputFactory.Create(io);
 
             this.outputs.push(output);
         });
