@@ -49,6 +49,7 @@ export class InputIO
         {
             if (this.state !== level)
             {
+                console.log('INTERR', this.state, level);
                 this.state = level;
 
                 this.onStateChangeCallback?.(this.state);
@@ -63,6 +64,7 @@ export class InputIO
 
     public OnStateChange(callback: (state: number) => void): void
     {
+        console.log('OnStateChange assign');
         this.onStateChangeCallback = callback;
     }
 }
@@ -73,24 +75,26 @@ export class Inputs
     constructor(
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger)
-        { }
-        
+    { }
+
     private callback!: (inputName: string, inputState: number) => void;
-    
-    public async Init()
+
+    public async Init(): Promise<void>
     {
         this._config.Inputs.forEach(io =>
         {
+            console.log('REG', io);
             const input = new InputIO(io);
 
             input.OnStateChange((state) =>
             {
+                console.log('inp.onstatCh assign');
                 this.callback?.(input.Name, state);
-            })
-        })
+            });
+        });
     }
 
-    public OnChange(callback)
+    public OnChange(callback: (inputName: string, inputState: number) => void): void
     {
         this.callback = callback;
     }

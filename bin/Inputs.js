@@ -51,6 +51,7 @@ class InputIO {
         this.IO.on('interrupt', (level) => {
             var _a;
             if (this.state !== level) {
+                console.log('INTERR', this.state, level);
                 this.state = level;
                 (_a = this.onStateChangeCallback) === null || _a === void 0 ? void 0 : _a.call(this, this.state);
             }
@@ -60,6 +61,7 @@ class InputIO {
         return this.state;
     }
     OnStateChange(callback) {
+        console.log('OnStateChange assign');
         this.onStateChangeCallback = callback;
     }
 }
@@ -71,9 +73,11 @@ let Inputs = class Inputs {
     }
     async Init() {
         this._config.Inputs.forEach(io => {
+            console.log('REG', io);
             const input = new InputIO(io);
             input.OnStateChange((state) => {
                 var _a;
+                console.log('inp.onstatCh assign');
                 (_a = this.callback) === null || _a === void 0 ? void 0 : _a.call(this, input.Name, state);
             });
         });
