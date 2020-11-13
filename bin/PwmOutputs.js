@@ -13,12 +13,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
-const pigpio_1 = require("pigpio");
+// import { Gpio } from 'pigpio';
 const Types_1 = require("./IoC/Types");
 class PwmIO {
+    // public readonly IO: Gpio;
     constructor(pwm) {
         this.Name = pwm.name;
-        this.IO = new pigpio_1.Gpio(pwm.pin, { mode: pigpio_1.Gpio.OUTPUT });
+        // this.IO = new Gpio(pwm.pin, { mode: Gpio.OUTPUT });
     }
     async Set(dutyCycle) {
         return new Promise((resolve) => {

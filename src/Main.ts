@@ -7,6 +7,7 @@ import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 import { Pwms } from './PwmOutputs';
+import { Inputs } from './Inputs';
 
 @injectable()
 export class Main
@@ -15,6 +16,7 @@ export class Main
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger,
         private _server: Host,
+        private _inputs: Inputs,
         private _pwms: Pwms,
         private _outputs: Outputs)
     { }
@@ -36,6 +38,7 @@ export class Main
 
         try
         {
+            await this._inputs.Init();
             await this._outputs.Init();
             await this._pwms.Init();
         }
@@ -67,11 +70,23 @@ export class Main
             this._outputs.SetValue(params.name, +params.value);
         });
         this._server.OnQuery('/get/output/:name/value', (req, res) => res.send(this._outputs.GetValue(req.params.name)?.toString() || ""));
-        
+
         this._server.OnCommand('/set/pwm/:name/:value', params => 
         {
             this._pwms.SetValue(params.name, +params.value);
         });
+
+        this._inputs.OnChange((name, value) =>
+        {
+            this._server.SendToAllClients('output-change', name, value);
+        });
+
+        let i = 0;
+        setInterval(() =>
+        {
+            this._server.SendToAllClients('isalive', i);
+            i = 1 - i;
+        }, 1000);
 
         this._server.Start();
 

@@ -19,11 +19,13 @@ const Outputs_1 = require("./Outputs");
 const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
 const PwmOutputs_1 = require("./PwmOutputs");
+const Inputs_1 = require("./Inputs");
 let Main = class Main {
-    constructor(_config, _log, _server, _pwms, _outputs) {
+    constructor(_config, _log, _server, _inputs, _pwms, _outputs) {
         this._config = _config;
         this._log = _log;
         this._server = _server;
+        this._inputs = _inputs;
         this._pwms = _pwms;
         this._outputs = _outputs;
         this.problems = []; // TODO: to trzeba przekuć w jakąś klasę...
@@ -38,6 +40,7 @@ let Main = class Main {
         }
         this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
         try {
+            await this._inputs.Init();
             await this._outputs.Init();
             await this._pwms.Init();
         }
@@ -66,6 +69,14 @@ let Main = class Main {
         this._server.OnCommand('/set/pwm/:name/:value', params => {
             this._pwms.SetValue(params.name, +params.value);
         });
+        this._inputs.OnChange((name, value) => {
+            this._server.SendToAllClients('output-change', name, value);
+        });
+        let i = 0;
+        setInterval(() => {
+            this._server.SendToAllClients('isalive', i);
+            i = 1 - i;
+        }, 1000);
         this._server.Start();
         process.on('SIGINT', () => {
             console.log('SIGINT detected. Closing server & disposing IO...');
@@ -79,6 +90,7 @@ Main = __decorate([
     __param(0, inversify_1.inject(Types_1.Types.IConfig)),
     __param(1, inversify_1.inject(Types_1.Types.ILogger)),
     __metadata("design:paramtypes", [Object, Object, Host_1.Host,
+        Inputs_1.Inputs,
         PwmOutputs_1.Pwms,
         Outputs_1.Outputs])
 ], Main);

@@ -16,19 +16,29 @@ const inversify_1 = require("inversify");
 const express = require("express");
 const cors = require("cors");
 const Types_1 = require("./IoC/Types");
+const SocketIoHost = require("socket.io");
+// import { Socket } from 'socket.io';
+const http = require("http");
+const Clients_1 = require("./Clients");
 let Host = class Host {
     constructor(_log, _config) {
         this._log = _log;
         this._config = _config;
+        this.clients = new Clients_1.Clients();
         this.expressServer = express();
         this.expressServer.use(cors());
+        this.httpServer = http.createServer(this.expressServer);
+        const socketHost = SocketIoHost(this.httpServer);
+        console.log('SOCKET REG');
+        socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${e}`));
+        socketHost.on('connection', (socket) => {
+            console.log('CONN');
+            this.clients.Add(socket);
+        });
         this.expressServer.get('/ping', (req, res) => res.send('pong'));
     }
-    Start() {
-        this.server = this.expressServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
-    }
-    Dispose() {
-        this.server.close(() => this._log.Log('Server closed.'));
+    SendToAllClients(eventName, ...args) {
+        this.clients.SendToAll(eventName, args);
     }
     OnCommand(url, callback) {
         this.expressServer.get(url, (req, res) => {
@@ -50,6 +60,13 @@ let Host = class Host {
                 res.sendStatus(500);
             }
         });
+    }
+    Start() {
+        // this.server = this.expressServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
+        this.server = this.httpServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
+    }
+    Dispose() {
+        this.server.close(() => this._log.Log('Server closed.'));
     }
 };
 Host = __decorate([

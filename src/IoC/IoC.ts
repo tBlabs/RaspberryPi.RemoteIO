@@ -24,6 +24,7 @@ import { IFileSystem } from "../Services/RemoteFs/IFileSystem";
 import { Outputs } from '../Outputs';
 import { FileSystem } from '../Services/RemoteFs/FileSystem';
 import { Pwms } from '../PwmOutputs';
+import { Inputs } from '../Inputs';
 
 const IoC = new Container();
 
@@ -40,6 +41,7 @@ try
     IoC.bind<Repeater>(Repeater).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<IConfig>(Types.IConfig).to(Config).inSingletonScope().whenTargetIsDefault();
     IoC.bind<Host>(Host).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind<Inputs>(Inputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Outputs>(Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Pwms>(Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL)

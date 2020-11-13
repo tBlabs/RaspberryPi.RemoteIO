@@ -19,6 +19,7 @@ const RemoteFs_1 = require("../Services/RemoteFs/RemoteFs");
 const Outputs_1 = require("../Outputs");
 const FileSystem_1 = require("../Services/RemoteFs/FileSystem");
 const PwmOutputs_1 = require("../PwmOutputs");
+const Inputs_1 = require("../Inputs");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
@@ -33,6 +34,7 @@ try {
     IoC.bind(Repeater_1.Repeater).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.IConfig).to(Config_1.Config).inSingletonScope().whenTargetIsDefault();
     IoC.bind(Host_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(Inputs_1.Inputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL) {
