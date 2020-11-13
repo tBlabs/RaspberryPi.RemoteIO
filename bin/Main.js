@@ -18,7 +18,7 @@ const Outputs_1 = require("./Peripherals/Outputs/Outputs");
 const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
 const PwmOutputs_1 = require("./Peripherals/Pwms/PwmOutputs");
-const Inputs_1 = require("./Peripherals/Inputs/Inputs");
+const DigitalInputs_1 = require("./Peripherals/DigitalInputs/DigitalInputs");
 let Main = class Main {
     constructor(_config, _log, _server, _inputs, _pwms, _outputs) {
         this._config = _config;
@@ -116,7 +116,7 @@ Main = __decorate([
     __param(0, inversify_1.inject(Types_1.Types.IConfig)),
     __param(1, inversify_1.inject(Types_1.Types.ILogger)),
     __metadata("design:paramtypes", [Object, Object, Host_1.Host,
-        Inputs_1.Inputs,
+        DigitalInputs_1.DigitalInputs,
         PwmOutputs_1.Pwms,
         Outputs_1.Outputs])
 ], Main);

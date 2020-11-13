@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const onoff_1 = require("onoff");
 class OutputIO {
     constructor(entry) {
-        console.log(`Registering "${entry.name}"...`);
-        this.Name = entry.name;
         try {
+            console.log(`Registering "${entry.name}"...`);
+            this.Name = entry.name;
             this.IO = new onoff_1.Gpio(entry.pin, 'out');
             console.log("Registered.");
         }

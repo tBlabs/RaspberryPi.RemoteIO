@@ -4,13 +4,13 @@ import { IFileSystem } from "../RemoteFs/IFileSystem";
 import { OutputConfigEntry } from "../../Peripherals/Outputs/OutputConfigEntry";
 import { IStartupArgs } from "../Environment/IStartupArgs";
 import { PwmConfigEntry } from "../../Peripherals/Pwms/PwmConfigEntry";
-import { InputConfigEntry } from "../../Peripherals/Inputs/InputConfigEntry";
+import { DigitalInputConfigEntry } from "../../Peripherals/DigitalInputs/DigitalInputConfigEntry";
 
 export interface RawConfig
 {
     port: number;
     logsLevel: number;
-    inputs: InputConfigEntry[];
+    inputs: DigitalInputConfigEntry[];
     outputs: OutputConfigEntry[];
     pwms: PwmConfigEntry[];
 }
@@ -19,7 +19,7 @@ export interface IConfig
 {
     LogsLevel: number;
     Port: number;
-    Inputs: InputConfigEntry[];
+    Inputs: DigitalInputConfigEntry[];
     Outputs: OutputConfigEntry[];
     Pwms: PwmConfigEntry[];
     ConfigFileDir: string;
@@ -56,7 +56,7 @@ export class Config implements IConfig
         return this._args.Args.port || this.config?.port || 8000;
     }
 
-    public get Inputs(): InputConfigEntry[]
+    public get Inputs(): DigitalInputConfigEntry[]
     {
         return this.config?.inputs || [];
     }

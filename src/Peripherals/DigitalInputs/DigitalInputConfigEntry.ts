@@ -1,5 +1,5 @@
 
-export interface InputConfigEntry
+export interface DigitalInputConfigEntry
 {
     name: string;
     pin: number;

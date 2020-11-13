@@ -4,7 +4,6 @@ import { ILogger } from '../../Services/Logger/ILogger';
 import { PwmConfigEntry } from './PwmConfigEntry';
 import { PwmIO } from './PwmIO';
 
-
 @injectable()
 export class PwmIoFactory
 {

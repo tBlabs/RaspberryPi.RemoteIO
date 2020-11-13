@@ -6,7 +6,7 @@ import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 import { Pwms } from './Peripherals/Pwms/PwmOutputs';
-import { Inputs } from './Peripherals/Inputs/Inputs';
+import { DigitalInputs } from './Peripherals/DigitalInputs/DigitalInputs';
 
 @injectable()
 export class Main
@@ -15,7 +15,7 @@ export class Main
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger,
         private _server: Host,
-        private _inputs: Inputs,
+        private _inputs: DigitalInputs,
         private _pwms: Pwms,
         private _outputs: Outputs)
     { }

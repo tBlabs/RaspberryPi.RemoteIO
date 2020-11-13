@@ -19,8 +19,9 @@ const RemoteFs_1 = require("../Services/RemoteFs/RemoteFs");
 const Outputs_1 = require("../Peripherals/Outputs/Outputs");
 const FileSystem_1 = require("../Services/RemoteFs/FileSystem");
 const PwmOutputs_1 = require("../Peripherals/Pwms/PwmOutputs");
-const Inputs_1 = require("../Peripherals/Inputs/Inputs");
+const DigitalInputs_1 = require("../Peripherals/DigitalInputs/DigitalInputs");
 const PwmIoFactory_1 = require("../Peripherals/Pwms/PwmIoFactory");
+const DigitalInputIoFactory_1 = require("../Peripherals/DigitalInputs/DigitalInputIoFactory");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
@@ -35,16 +36,17 @@ try {
     IoC.bind(Repeater_1.Repeater).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.IConfig).to(Config_1.Config).inSingletonScope().whenTargetIsDefault();
     IoC.bind(Host_1.Host).toSelf().inSingletonScope().whenTargetIsDefault();
-    IoC.bind(Inputs_1.Inputs).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(DigitalInputIoFactory_1.DigitalInputIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
+    IoC.bind(DigitalInputs_1.DigitalInputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmIoFactory_1.PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL) {
-        console.log('Using RemoteShell');
+        // console.log('Using RemoteShell');
         IoC.bind(Types_1.Types.IFileSystem).to(RemoteFs_1.RemoteFs).inTransientScope().whenTargetIsDefault();
     }
     else {
-        console.log('Using internal Shell');
+        // console.log('Using internal Shell');
         IoC.bind(Types_1.Types.IFileSystem).to(FileSystem_1.FileSystem).inTransientScope().whenTargetIsDefault();
     }
 }

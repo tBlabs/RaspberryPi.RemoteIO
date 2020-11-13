@@ -2,12 +2,13 @@ import { inject, injectable } from "inversify";
 import { Types } from "../../IoC/Types";
 import { IConfig } from "../../Services/Config/Config";
 import { ILogger } from "../../Services/Logger/ILogger";
-import { InputIO } from "./InputIO";
+import { DigitalInputIoFactory } from "./DigitalInputIoFactory";
 
 @injectable()
-export class Inputs
+export class DigitalInputs
 {
     constructor(
+        private _digitalInputFactory: DigitalInputIoFactory,
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger)
     { }
@@ -18,7 +19,7 @@ export class Inputs
     {
         this._config.Inputs.forEach(io =>
         {
-            const input = new InputIO(io);
+            const input = this._digitalInputFactory.Create(io);
 
             input.OnStateChange = (state) =>
             {
