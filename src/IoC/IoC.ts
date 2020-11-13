@@ -21,10 +21,10 @@ import { IShell } from '../Services/RemoteShell/IShell';
 import { RemoteShell } from '../Services/RemoteShell/RemoteShell';
 import { RemoteFs } from '../Services/RemoteFs/RemoteFs';
 import { IFileSystem } from "../Services/RemoteFs/IFileSystem";
-import { Outputs } from '../Outputs';
+import { Outputs } from '../Peripherals/Outputs/Outputs';
 import { FileSystem } from '../Services/RemoteFs/FileSystem';
-import { Pwms } from '../PwmOutputs';
-import { Inputs } from '../Inputs';
+import { Pwms } from '../Peripherals/Pwms/PwmOutputs';
+import { Inputs } from '../Peripherals/Inputs/Inputs';
 
 const IoC = new Container();
 

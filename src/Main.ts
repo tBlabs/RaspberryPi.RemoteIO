@@ -2,12 +2,12 @@ import { inject, injectable } from 'inversify';
 import { IConfig } from './Services/Config/Config';
 // import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 import { Host } from './Host';
-import { Outputs } from './Outputs';
+import { Outputs } from './Peripherals/Outputs/Outputs';
 import { Types } from './IoC/Types';
 import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
-import { Pwms } from './PwmOutputs';
-import { Inputs } from './Inputs';
+import { Pwms } from './Peripherals/Pwms/PwmOutputs';
+import { Inputs } from './Peripherals/Inputs/Inputs';
 
 @injectable()
 export class Main
@@ -21,7 +21,7 @@ export class Main
         private _outputs: Outputs)
     { }
 
-    private problems: string[] = []; // TODO: to trzeba przekuć w jakąś klasę...
+    private problems: string[] = [];
 
     public async Start(): Promise<void>
     {
@@ -29,7 +29,7 @@ export class Main
         {
             await this._config.Init();
         }
-        catch (error) // TODO: może warto wsadzić to w metodę?
+        catch (error)
         {
             console.log('Could not load config');
             this.problems.push(`⚡ Could not load configuration: ${error}`);

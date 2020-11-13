@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inversify_1 = require("inversify");
 // import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 const Host_1 = require("./Host");
-const Outputs_1 = require("./Outputs");
+const Outputs_1 = require("./Peripherals/Outputs/Outputs");
 const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
-const PwmOutputs_1 = require("./PwmOutputs");
-const Inputs_1 = require("./Inputs");
+const PwmOutputs_1 = require("./Peripherals/Pwms/PwmOutputs");
+const Inputs_1 = require("./Peripherals/Inputs/Inputs");
 let Main = class Main {
     constructor(_config, _log, _server, _inputs, _pwms, _outputs) {
         this._config = _config;
@@ -28,14 +28,13 @@ let Main = class Main {
         this._inputs = _inputs;
         this._pwms = _pwms;
         this._outputs = _outputs;
-        this.problems = []; // TODO: to trzeba przekuć w jakąś klasę...
+        this.problems = [];
     }
     async Start() {
         try {
             await this._config.Init();
         }
-        catch (error) // TODO: może warto wsadzić to w metodę?
-         {
+        catch (error) {
             console.log('Could not load config');
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }

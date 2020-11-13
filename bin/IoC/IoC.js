@@ -16,10 +16,10 @@ const Repeater_1 = require("../Services/Repeater/Repeater");
 const ConsoleOutput_1 = require("../Services/Logger/ConsoleOutput");
 const RemoteShell_1 = require("../Services/RemoteShell/RemoteShell");
 const RemoteFs_1 = require("../Services/RemoteFs/RemoteFs");
-const Outputs_1 = require("../Outputs");
+const Outputs_1 = require("../Peripherals/Outputs/Outputs");
 const FileSystem_1 = require("../Services/RemoteFs/FileSystem");
-const PwmOutputs_1 = require("../PwmOutputs");
-const Inputs_1 = require("../Inputs");
+const PwmOutputs_1 = require("../Peripherals/Pwms/PwmOutputs");
+const Inputs_1 = require("../Peripherals/Inputs/Inputs");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
