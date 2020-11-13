@@ -33,6 +33,10 @@ let Config = class Config {
         var _a;
         return this._args.Args.port || ((_a = this.config) === null || _a === void 0 ? void 0 : _a.port) || 8000;
     }
+    get Inputs() {
+        var _a;
+        return ((_a = this.config) === null || _a === void 0 ? void 0 : _a.inputs) || [];
+    }
     get Outputs() {
         var _a;
         return ((_a = this.config) === null || _a === void 0 ? void 0 : _a.outputs) || [];

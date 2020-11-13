@@ -10,6 +10,7 @@ export interface RawConfig
 {
     port: number;
     logsLevel: number;
+    inputs: InputConfigEntry[];
     outputs: OutputConfigEntry[];
     pwms: PwmConfigEntry[];
 }
@@ -54,6 +55,12 @@ export class Config implements IConfig
     {
         return this._args.Args.port || this.config?.port || 8000;
     }
+
+    public get Inputs(): InputConfigEntry[]
+    {
+        return this.config?.inputs || [];
+    }
+
 
     public get Outputs(): OutputConfigEntry[]
     {
