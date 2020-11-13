@@ -23,7 +23,7 @@ export class Config implements IConfig
         try 
         {
             this.configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
-            this.config = JSON.parse(configAsString);
+            this.config = JSON.parse(this.configAsString);
         }
         catch (error)
         {

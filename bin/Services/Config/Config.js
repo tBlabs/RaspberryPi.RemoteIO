@@ -24,7 +24,7 @@ let Config = class Config {
     async Init() {
         try {
             this.configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
-            this.config = JSON.parse(configAsString);
+            this.config = JSON.parse(this.configAsString);
         }
         catch (error) {
             throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start? (this question is valid only in remote mode)`);
