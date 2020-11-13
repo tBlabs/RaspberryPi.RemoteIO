@@ -18,12 +18,12 @@ export class Inputs
     {
         this._config.Inputs.forEach(io =>
         {
-            console.log('REG', io);
+            // console.log('REG', io);
             const input = new InputIO(io);
 
             input.OnStateChange = (state) =>
             {
-                console.log('inp.onstatCh assign');
+                // console.log('inp.onstatCh assign');
                 this.callback?.(input.Name, state);
             };
         });

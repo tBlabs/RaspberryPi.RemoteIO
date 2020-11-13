@@ -70,7 +70,7 @@ let Main = class Main {
             this._pwms.SetValue(params.name, +params.value);
         });
         this._inputs.OnChange((name, value) => {
-            console.log('MAIN INPUT ON CHANGE', name, value);
+            // console.log('MAIN INPUT ON CHANGE', name, value);
             this._server.SendToAllClients('input-change', name, value);
         });
         let i = 0;

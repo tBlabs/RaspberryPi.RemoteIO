@@ -22,11 +22,11 @@ let Inputs = class Inputs {
     }
     async Init() {
         this._config.Inputs.forEach(io => {
-            console.log('REG', io);
+            // console.log('REG', io);
             const input = new InputIO_1.InputIO(io);
             input.OnStateChange = (state) => {
                 var _a;
-                console.log('inp.onstatCh assign');
+                // console.log('inp.onstatCh assign');
                 (_a = this.callback) === null || _a === void 0 ? void 0 : _a.call(this, input.Name, state);
             };
         });

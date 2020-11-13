@@ -26,8 +26,10 @@ export class Clients
 
     public SendToAll(event: string, ...args: any[]): void
     {
+        // console.log('STA', this.clients.length);
         this.clients.forEach((socket: Socket) =>
         {
+            // console.log('sending to', socket.id);
             socket.emit(event, ...args);
         });
     }

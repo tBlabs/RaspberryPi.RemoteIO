@@ -38,7 +38,7 @@ export class Host
 
         socketHost.on('connection', (socket) =>
         {
-            console.log('CONN');
+            // console.log('ADDING NEW CLIENT', socket.id);
             this.clients.Add(socket);
         });
 

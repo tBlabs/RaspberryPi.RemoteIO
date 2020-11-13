@@ -10,6 +10,7 @@ export class InputIO
     // private onStateChangeCallback!: (state: number) => void;
     constructor(entry: InputConfigEntry)
     {
+        // console.log('CTOR');
         this.Name = entry.name;
         let pull = Gpio.PUD_OFF;
         let edge = Gpio.EITHER_EDGE;
@@ -27,15 +28,24 @@ export class InputIO
             case "rising": edge = Gpio.RISING_EDGE; break;
             case "falling": edge = Gpio.FALLING_EDGE; break;
         }
+// console.log('aaa');
+try {
+    this.IO = new Gpio(entry.pin, {
+        mode: Gpio.INPUT,
+        pullUpDown: pull,
+        edge: edge
+    });
+} catch (error) {
+    console.log(error.message);
+}
+     
 
-        this.IO = new Gpio(entry.pin, {
-            mode: Gpio.INPUT,
-            pullUpDown: pull,
-            edge: edge
-        });
-
-        this.IO.on('interrupt', (level) =>
+        // console.log('CONSTR');
+        this.IO.on('interrupt',  (level) =>
+        // let level = 0; setInterval( ()=>
         {
+            // level = 1-level;
+            // console.log('L', level);
             if (this.state !== level)
             {
                 console.log('INTERR', this.state, level);
@@ -44,6 +54,7 @@ export class InputIO
                 this.OnStateChange?.(this.state);
             }
         });
+        // }, 1000);
     }
 
     public get State(): number

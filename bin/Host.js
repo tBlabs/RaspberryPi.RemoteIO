@@ -32,7 +32,7 @@ let Host = class Host {
         console.log('SOCKET REG');
         socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${e}`));
         socketHost.on('connection', (socket) => {
-            console.log('CONN');
+            // console.log('ADDING NEW CLIENT', socket.id);
             this.clients.Add(socket);
         });
         this.expressServer.get('/ping', (req, res) => res.send('pong'));

@@ -17,7 +17,9 @@ class Clients {
         this.clients.splice(clientIndex, 1);
     }
     SendToAll(event, ...args) {
+        // console.log('STA', this.clients.length);
         this.clients.forEach((socket) => {
+            // console.log('sending to', socket.id);
             socket.emit(event, ...args);
         });
     }
