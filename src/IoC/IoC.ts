@@ -46,12 +46,12 @@ try
     IoC.bind<Pwms>(Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL)
     {
-        // console.log('Using RemoteShell');
+        console.log('Using RemoteShell');
         IoC.bind<IFileSystem>(Types.IFileSystem).to(RemoteFs).inTransientScope().whenTargetIsDefault();
     }
     else  
     { 
-        // console.log('Using internal Shell');
+        console.log('Using internal Shell');
         IoC.bind<IFileSystem>(Types.IFileSystem).to(FileSystem).inTransientScope().whenTargetIsDefault();
     }
 }

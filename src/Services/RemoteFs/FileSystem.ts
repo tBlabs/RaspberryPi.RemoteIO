@@ -21,13 +21,18 @@ export class FileSystem implements IFileSystem
 
     public async ReadFile(fileDir: string): Promise<string>
     {
+        console.log('Reading', fileDir);
         return new Promise((resolve, reject) =>
         {
             fs.readFile(fileDir, (err, data) =>
             {
                 if (err)
+                {
+                    console.log('FILE READ ERROR', err);
                     reject("Could not read file.");
+                }
 
+                    console.log('FILE CONTENT:', data?.toString());
                 resolve(data?.toString());
             });
         });
