@@ -10,7 +10,8 @@ export class InputIO
     // private onStateChangeCallback!: (state: number) => void;
     constructor(entry: InputConfigEntry)
     {
-        // console.log('CTOR');
+        console.log(`Registering "${entry.name}"...`);
+
         this.Name = entry.name;
         let pull = Gpio.PUD_OFF;
         let edge = Gpio.EITHER_EDGE;
@@ -28,33 +29,35 @@ export class InputIO
             case "rising": edge = Gpio.RISING_EDGE; break;
             case "falling": edge = Gpio.FALLING_EDGE; break;
         }
-// console.log('aaa');
-try {
-    this.IO = new Gpio(entry.pin, {
-        mode: Gpio.INPUT,
-        pullUpDown: pull,
-        edge: edge
-    });
-} catch (error) {
-    console.log(error.message);
-}
-     
 
-        // console.log('CONSTR');
-        this.IO.on('interrupt',  (level) =>
-        // let level = 0; setInterval( ()=>
+        try
         {
-            // level = 1-level;
-            // console.log('L', level);
-            if (this.state !== level)
-            {
-                console.log('INTERR', this.state, level);
-                this.state = level;
+            this.IO = new Gpio(entry.pin, {
+                mode: Gpio.INPUT,
+                pullUpDown: pull,
+                edge: edge
+            });
 
-                this.OnStateChange?.(this.state);
-            }
-        });
-        // }, 1000);
+            this.IO.on('interrupt', (level) =>
+            // let level = 0; setInterval( ()=>
+            {
+                // level = 1-level;
+                // console.log('L', level);
+                if (this.state !== level)
+                {
+                    console.log('INTERR', this.state, level);
+                    this.state = level;
+
+                    this.OnStateChange?.(this.state);
+                }
+            });
+            // }, 1000);
+            console.log("Registered.");
+        } 
+        catch (error)
+        {
+            console.log("Registering error:", error.message);
+        }
     }
 
     public get State(): number

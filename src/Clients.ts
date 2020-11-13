@@ -18,7 +18,7 @@ export class Clients
     }
 
     public Remove(socket: Socket): void
-    {
+    { 
         const clientIndex = this.clients.indexOf(socket);
 
         this.clients.splice(clientIndex, 1);

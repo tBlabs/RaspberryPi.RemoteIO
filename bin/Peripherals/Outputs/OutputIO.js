@@ -2,9 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const onoff_1 = require("onoff");
 class OutputIO {
-    constructor(output) {
-        this.Name = output.name;
-        this.IO = new onoff_1.Gpio(output.pin, 'out');
+    constructor(entry) {
+        console.log(`Registering "${entry.name}"...`);
+        this.Name = entry.name;
+        try {
+            this.IO = new onoff_1.Gpio(entry.pin, 'out');
+            console.log("Registered.");
+        }
+        catch (error) {
+            console.log(`Registering error:`, error.message);
+        }
     }
     async Set(value) {
         return new Promise((resolve, reject) => {

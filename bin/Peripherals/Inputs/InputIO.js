@@ -5,7 +5,7 @@ class InputIO {
     // private onStateChangeCallback!: (state: number) => void;
     constructor(entry) {
         this.state = (-1);
-        // console.log('CTOR');
+        console.log(`Registering "${entry.name}"...`);
         this.Name = entry.name;
         let pull = pigpio_1.Gpio.PUD_OFF;
         let edge = pigpio_1.Gpio.EITHER_EDGE;
@@ -31,29 +31,28 @@ class InputIO {
                 edge = pigpio_1.Gpio.FALLING_EDGE;
                 break;
         }
-        // console.log('aaa');
         try {
             this.IO = new pigpio_1.Gpio(entry.pin, {
                 mode: pigpio_1.Gpio.INPUT,
                 pullUpDown: pull,
                 edge: edge
             });
+            this.IO.on('interrupt', (level) => {
+                var _a;
+                // level = 1-level;
+                // console.log('L', level);
+                if (this.state !== level) {
+                    console.log('INTERR', this.state, level);
+                    this.state = level;
+                    (_a = this.OnStateChange) === null || _a === void 0 ? void 0 : _a.call(this, this.state);
+                }
+            });
+            // }, 1000);
+            console.log("Registered.");
         }
         catch (error) {
-            console.log(error.message);
+            console.log("Registering error:", error.message);
         }
-        // console.log('CONSTR');
-        this.IO.on('interrupt', (level) => {
-            var _a;
-            // level = 1-level;
-            // console.log('L', level);
-            if (this.state !== level) {
-                console.log('INTERR', this.state, level);
-                this.state = level;
-                (_a = this.OnStateChange) === null || _a === void 0 ? void 0 : _a.call(this, this.state);
-            }
-        });
-        // }, 1000);
     }
     get State() {
         return this.state;

@@ -39,9 +39,9 @@ export class Main
 
         try
         {
-            await this._inputs.Init();
             await this._outputs.Init();
             await this._pwms.Init();
+            await this._inputs.Init();
         }
         catch (error)
         {

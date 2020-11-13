@@ -9,8 +9,19 @@ export class PwmIO
 
     constructor(entry: PwmConfigEntry)
     {
+        console.log(`Registering "${entry.name}"...`);
+
         this.Name = entry.name;
-        this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
+
+        try
+        {
+            this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
+            console.log("Registered.");
+        }
+        catch (error)
+        {
+            console.log(`Registering error:`, error.message);
+        }
     }
 
     public async Set(dutyCycle: number): Promise<void>

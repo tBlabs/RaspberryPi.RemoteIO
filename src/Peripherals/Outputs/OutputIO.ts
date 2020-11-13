@@ -1,4 +1,4 @@
- import { Gpio, BinaryValue } from 'onoff';
+import { Gpio, BinaryValue } from 'onoff';
 import { OutputConfigEntry } from './OutputConfigEntry';
 import { IDisposable } from '../../IDisposable';
 
@@ -7,10 +7,22 @@ export class OutputIO implements IDisposable
     public readonly Name: string;
     public readonly IO: Gpio;
 
-    constructor(output: OutputConfigEntry)
+    constructor(entry: OutputConfigEntry)
     {
-        this.Name = output.name;
-        this.IO = new Gpio(output.pin, 'out');
+        console.log(`Registering "${entry.name}"...`);
+
+        this.Name = entry.name;
+
+        try
+        {
+            this.IO = new Gpio(entry.pin, 'out');
+            console.log("Registered.");
+        } 
+        catch (error)
+        {
+            console.log(`Registering error:`, error.message);
+        }
+
     }
 
     public async Set(value: BinaryValue): Promise<void>

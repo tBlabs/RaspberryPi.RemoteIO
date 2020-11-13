@@ -22,6 +22,7 @@ let Outputs = class Outputs {
         this.outputs = [];
     }
     Init() {
+        console.log(this._config.Outputs);
         this._config.Outputs.forEach((o) => {
             const output = new OutputIO_1.OutputIO(o);
             this.outputs.push(output);
