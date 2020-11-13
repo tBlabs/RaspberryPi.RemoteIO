@@ -36,9 +36,11 @@ class DigitalInputIO {
             this.IO = new pigpio_1.Gpio(entry.pin, {
                 mode: pigpio_1.Gpio.INPUT,
                 pullUpDown: pull,
-                edge: edge
+                edge: edge,
+                alert: true
             });
-            this.IO.on('interrupt', (level) => {
+            this.IO.glitchFilter(10 * 1000); // 10ms
+            this.IO.on('alert', (level, tick) => {
                 var _a;
                 if (this.state !== level) {
                     this.state = level;

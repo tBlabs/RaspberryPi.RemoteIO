@@ -23,7 +23,7 @@ let Outputs = class Outputs {
     }
     Init() {
         this._config.Outputs.forEach((o) => {
-            const output = new OutputIO_1.OutputIO(o);
+            const output = new OutputIO_1.DigitalOutputIO(o);
             this.outputs.push(output);
         });
     }

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const onoff_1 = require("onoff");
-class OutputIO {
+class DigitalOutputIO {
     constructor(entry) {
         try {
             console.log(`Registering "${entry.name}"...`);
@@ -35,5 +35,5 @@ class OutputIO {
         this.IO.unexport();
     }
 }
-exports.OutputIO = OutputIO;
+exports.DigitalOutputIO = DigitalOutputIO;
 //# sourceMappingURL=OutputIO.js.map

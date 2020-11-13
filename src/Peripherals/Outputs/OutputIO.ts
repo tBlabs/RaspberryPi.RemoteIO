@@ -2,7 +2,7 @@ import { Gpio, BinaryValue } from 'onoff';
 import { OutputConfigEntry } from './OutputConfigEntry';
 import { IDisposable } from '../../IDisposable';
 
-export class OutputIO implements IDisposable
+export class DigitalOutputIO implements IDisposable
 {
     public readonly Name!: string;
     public readonly IO!: Gpio;

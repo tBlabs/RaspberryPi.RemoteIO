@@ -4,12 +4,12 @@ import { IDisposable } from '../../IDisposable';
 import { IConfig } from '../../Services/Config/Config';
 import { Types } from '../../IoC/Types';
 import { ILogger } from '../../Services/Logger/ILogger';
-import { OutputIO } from './OutputIO';
+import { DigitalOutputIO } from './OutputIO';
 
 @injectable()
 export class Outputs implements IDisposable
 {
-    private outputs: OutputIO[] = [];
+    private outputs: DigitalOutputIO[] = [];
 
     constructor(
         @inject(Types.IConfig) private _config: IConfig,
@@ -20,7 +20,7 @@ export class Outputs implements IDisposable
     {
         this._config.Outputs.forEach((o) =>
         {
-            const output = new OutputIO(o);
+            const output = new DigitalOutputIO(o);
 
             this.outputs.push(output);
         });
@@ -70,7 +70,7 @@ export class Outputs implements IDisposable
 
     public Dispose(): void
     {
-        this.outputs.forEach((o: OutputIO) =>
+        this.outputs.forEach((o: DigitalOutputIO) =>
         {
             o.Dispose();
         });

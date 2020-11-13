@@ -37,10 +37,13 @@ export class DigitalInputIO
             this.IO = new Gpio(entry.pin, {
                 mode: Gpio.INPUT,
                 pullUpDown: pull,
-                edge: edge
+                edge: edge,
+                alert: true
             });
 
-            this.IO.on('interrupt', (level) =>
+            this.IO.glitchFilter(10 * 1000); // 10ms
+
+            this.IO.on('alert', (level, tick) =>
             {
                 if (this.state !== level)
                 {

@@ -78,7 +78,6 @@ export class Host
 
     public Start(): void
     {
-        // this.server = this.expressServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
         this.server = this.httpServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
     }
 
