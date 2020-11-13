@@ -38,11 +38,11 @@ try {
     IoC.bind(Outputs_1.Outputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.USE_REMOTE_SHELL) {
-        // console.log('Using RemoteShell');
+        console.log('Using RemoteShell');
         IoC.bind(Types_1.Types.IFileSystem).to(RemoteFs_1.RemoteFs).inTransientScope().whenTargetIsDefault();
     }
     else {
-        // console.log('Using internal Shell');
+        console.log('Using internal Shell');
         IoC.bind(Types_1.Types.IFileSystem).to(FileSystem_1.FileSystem).inTransientScope().whenTargetIsDefault();
     }
 }

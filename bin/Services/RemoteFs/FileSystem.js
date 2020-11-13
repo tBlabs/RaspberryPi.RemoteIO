@@ -19,10 +19,14 @@ let FileSystem = class FileSystem {
         });
     }
     async ReadFile(fileDir) {
+        console.log('Reading', fileDir);
         return new Promise((resolve, reject) => {
             fs.readFile(fileDir, (err, data) => {
-                if (err)
+                if (err) {
+                    console.log('FILE READ ERROR', err);
                     reject("Could not read file.");
+                }
+                console.log('FILE CONTENT:', data === null || data === void 0 ? void 0 : data.toString());
                 resolve(data === null || data === void 0 ? void 0 : data.toString());
             });
         });

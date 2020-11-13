@@ -2,7 +2,7 @@ import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 import { IShell } from './IShell';
 import { Types } from '../../IoC/Types';
-import { ILogger } from '../logger/ILogger';
+import { ILogger } from '../Logger/ILogger';
 import Axios from 'axios';
 import { ExecOutput } from './ExecOutput';
 
