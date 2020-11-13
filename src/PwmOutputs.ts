@@ -1,5 +1,5 @@
 import { injectable, inject } from 'inversify';
-// import { Gpio } from 'pigpio';
+import { Gpio } from 'pigpio';
 import { Types } from './IoC/Types';
 import { IConfig } from './Services/Config/Config';
 import { ILogger } from './Services/Logger/ILogger';
@@ -13,12 +13,12 @@ export interface PwmConfigEntry
 export class PwmIO
 {
     public readonly Name: string;
-    // public readonly IO: Gpio;
+    public readonly IO: Gpio;
 
-    constructor(pwm: PwmConfigEntry)
+    constructor(entry: PwmConfigEntry)
     {
-        this.Name = pwm.name;
-        // this.IO = new Gpio(pwm.pin, { mode: Gpio.OUTPUT });
+        this.Name = entry.name;
+        this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
     }
 
     public async Set(dutyCycle: number): Promise<void>

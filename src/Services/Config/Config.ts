@@ -4,6 +4,7 @@ import { IFileSystem } from "../RemoteFs/IFileSystem";
 import { OutputConfigEntry } from "../../OutputConfigEntry";
 import { IStartupArgs } from "../Environment/IStartupArgs";
 import { PwmConfigEntry, Pwms } from "../../PwmOutputs";
+import { InputConfigEntry } from "../../Inputs";
 
 export interface RawConfig
 {
@@ -17,6 +18,7 @@ export interface IConfig
 {
     LogsLevel: number;
     Port: number;
+    Inputs: InputConfigEntry[];
     Outputs: OutputConfigEntry[];
     Pwms: PwmConfigEntry[];
     ConfigFileDir: string;

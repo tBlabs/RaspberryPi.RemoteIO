@@ -78,7 +78,8 @@ export class Main
 
         this._inputs.OnChange((name, value) =>
         {
-            this._server.SendToAllClients('output-change', name, value);
+            console.log(name, value);
+            this._server.SendToAllClients('input-change', name, value);
         });
 
         let i = 0;
