@@ -17,7 +17,7 @@ export class InputIO
     public readonly Name: string;
     public readonly IO: Gpio;
     private state = (-1);
-    private onStateChangeCallback!: (state: number) => void;
+    // private onStateChangeCallback!: (state: number) => void;
 
     constructor(entry: InputConfigEntry)
     {
@@ -52,7 +52,7 @@ export class InputIO
                 console.log('INTERR', this.state, level);
                 this.state = level;
 
-                this.onStateChangeCallback?.(this.state);
+                this.OnStateChange?.(this.state);
             }
         });
     }
@@ -62,11 +62,11 @@ export class InputIO
         return this.state;
     }
 
-    public OnStateChange(callback: (state: number) => void): void
-    {
-        console.log('OnStateChange assign');
-        this.onStateChangeCallback = callback;
-    }
+    public OnStateChange!: (state: number) => void;
+    // {
+        // console.log('OnStateChange assign');
+        // this.onStateChangeCallback = callback;
+    // }
 }
 
 @injectable()
@@ -86,11 +86,11 @@ export class Inputs
             console.log('REG', io);
             const input = new InputIO(io);
 
-            input.OnStateChange((state) =>
+            input.OnStateChange = (state) =>
             {
                 console.log('inp.onstatCh assign');
                 this.callback?.(input.Name, state);
-            });
+            };
         });
     }
 

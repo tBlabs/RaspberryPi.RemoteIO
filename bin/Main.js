@@ -36,6 +36,7 @@ let Main = class Main {
         }
         catch (error) // TODO: może warto wsadzić to w metodę?
          {
+            console.log('Could not load config');
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
         this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(

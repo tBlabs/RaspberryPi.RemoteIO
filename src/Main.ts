@@ -31,6 +31,7 @@ export class Main
         }
         catch (error) // TODO: może warto wsadzić to w metodę?
         {
+            console.log('Could not load config');
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
 

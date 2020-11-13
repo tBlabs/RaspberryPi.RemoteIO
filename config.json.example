@@ -1,5 +1,20 @@
 {
     "port": 8000,
+    "logsLevel": 2,
+    "inputs": [
+        {
+            "name": "Button1",
+            "pin": 23,
+            "pull": "none",
+            "edge": "both"
+        }
+    ],
+    "pwms": [
+        {
+            "name": "Led",
+            "pin": 25
+        }
+    ],
     "outputs": [
         {
             "name": "GreenLed",

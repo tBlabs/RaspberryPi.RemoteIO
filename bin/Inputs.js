@@ -16,6 +16,7 @@ const inversify_1 = require("inversify");
 const pigpio_1 = require("pigpio");
 const Types_1 = require("./IoC/Types");
 class InputIO {
+    // private onStateChangeCallback!: (state: number) => void;
     constructor(entry) {
         this.state = (-1);
         this.Name = entry.name;
@@ -53,16 +54,12 @@ class InputIO {
             if (this.state !== level) {
                 console.log('INTERR', this.state, level);
                 this.state = level;
-                (_a = this.onStateChangeCallback) === null || _a === void 0 ? void 0 : _a.call(this, this.state);
+                (_a = this.OnStateChange) === null || _a === void 0 ? void 0 : _a.call(this, this.state);
             }
         });
     }
     get State() {
         return this.state;
-    }
-    OnStateChange(callback) {
-        console.log('OnStateChange assign');
-        this.onStateChangeCallback = callback;
     }
 }
 exports.InputIO = InputIO;
@@ -75,11 +72,11 @@ let Inputs = class Inputs {
         this._config.Inputs.forEach(io => {
             console.log('REG', io);
             const input = new InputIO(io);
-            input.OnStateChange((state) => {
+            input.OnStateChange = (state) => {
                 var _a;
                 console.log('inp.onstatCh assign');
                 (_a = this.callback) === null || _a === void 0 ? void 0 : _a.call(this, input.Name, state);
-            });
+            };
         });
     }
     OnChange(callback) {
