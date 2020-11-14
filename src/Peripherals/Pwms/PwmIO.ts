@@ -4,17 +4,17 @@ import { PwmConfigEntry } from './PwmConfigEntry';
 
 export class PwmIO
 {
-    public readonly Name: string;
+    public readonly Name!: string;
     public readonly IO!: Gpio;
 
     constructor(private _log: ILogger, entry: PwmConfigEntry)
     {
-        _log.Log(`Registering "${entry.name}"...`);
-
-        this.Name = entry.name;
-
         try
         {
+            _log.Log(`Registering "${entry.name}"...`);
+
+            this.Name = entry.name;
+
             this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
 
             _log.Log("Registered.");
@@ -29,7 +29,7 @@ export class PwmIO
     {
         try
         {
-            this._log.Trace(`Setting pwm "${name}" duty value to ${dutyCycle}...`);
+            this._log.Trace(`Setting pwm "${this.Name}" duty value to ${dutyCycle}...`);
 
             if (dutyCycle < 0 || dutyCycle > 255)
             {
@@ -38,7 +38,7 @@ export class PwmIO
 
             this.IO.pwmWrite(dutyCycle);
 
-            this._log.Trace(`"${name}" set to ${dutyCycle}.`);
+            this._log.Trace(`"${this.Name}" set to ${dutyCycle}.`);
         }
         catch (error)
         {

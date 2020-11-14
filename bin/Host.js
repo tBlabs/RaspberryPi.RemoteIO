@@ -63,6 +63,7 @@ let Host = class Host {
         this.server = this.httpServer.listen(this._config.Port, () => this._log.Log(`Raspberry Pi Remote IO server started @ ${this._config.Port}`));
     }
     Dispose() {
+        this.httpServer.close(() => this._log.Log('Http server closed.'));
         this.server.close(() => this._log.Log('Server closed.'));
     }
 };

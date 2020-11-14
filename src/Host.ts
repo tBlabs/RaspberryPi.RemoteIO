@@ -83,6 +83,7 @@ export class Host
 
     public Dispose()
     {
+        this.httpServer.close(()=>this._log.Log('Http server closed.'));
         this.server.close(() => this._log.Log('Server closed.'));
     }
 }
