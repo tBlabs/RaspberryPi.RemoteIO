@@ -18,16 +18,17 @@ let Config = class Config {
     constructor(_args, _fs) {
         this._args = _args;
         this._fs = _fs;
-        this.CONFIG_FILE_DIR = "/home/pi/RaspberryPi.RemoteIO/config.json";
         this.configAsString = "(not loaded yet)";
     }
     async Init() {
         try {
-            this.configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
+            if (this.ConfigFileDir === "")
+                throw new Error(`Config file dir not defined. Should be in .env file under key CONFIG_FILE_DIR.`);
+            this.configAsString = await this._fs.ReadFile(this.ConfigFileDir);
             this.config = JSON.parse(this.configAsString);
         }
         catch (error) {
-            throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start? (this question is valid only in remote mode)`);
+            throw new Error(`Could not load config file (from ${this.ConfigFileDir}). In remote mode check if remote shell (@ ${process.env.REMOTE_SHELL}) was active at the moment of app start?`);
         }
     }
     get Raw() {
@@ -58,7 +59,7 @@ let Config = class Config {
         return 1;
     }
     get ConfigFileDir() {
-        return this.CONFIG_FILE_DIR;
+        return process.env.CONFIG_FILE_DIR || "";
     }
 };
 Config = __decorate([

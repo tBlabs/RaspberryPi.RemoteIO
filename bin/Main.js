@@ -30,15 +30,6 @@ let Main = class Main {
         this.problems = [];
     }
     async Start() {
-        //         this._log.LogEnable = true;
-        //         this._log.TraceEnable = true;
-        //         // this._log.Log('TTTTT', new Error("adf").name)
-        //         try {
-        //             throw new Error("dupa")
-        //         } catch (error) {
-        //             this._log.Log('EEEEEEEEE', error)
-        //         }
-        // return
         await this.LoadConfiguration();
         await this.InitIo();
         this.RegisterDigitalOutputsHandlers();
@@ -69,20 +60,29 @@ let Main = class Main {
     }
     RegisterHelpHandler() {
         this._server.OnQuery('/', (req, res) => {
-            const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi driver via Http")
+            const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi IO driver via Http & Socket")
                 .Warning(this.problems)
-                .Config("USE_REMOTE_SHELL", process.env.USE_REMOTE_SHELL ? "true" : "false", "empty", "USE_REMOTE_SHELL={empty or anything}", 'Environment variable process.env (".env" file)')
-                .Config("REMOTE_SHELL", process.env.REMOTE_SHELL, "empty", "REMOTE_SHELL=http://192.168.43.229:3000", 'Environment variable process.env (".env" file)')
-                .Config("port", this._config.Port.toString(), "8000", "1234 (number value)", this._config.ConfigFileDir)
-                .Config("inputs", JSON.stringify(this._config.Inputs), "empty", `[{ "name": "Button1", "pin": 2, "pull": "none", "edge": "both" }]`, this._config.ConfigFileDir)
-                .Config("outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`, this._config.ConfigFileDir)
-                .Config("pwm", JSON.stringify(this._config.Pwms), "empty", `[{ "name": "Led", "pin": 4 }]`, this._config.ConfigFileDir)
-                .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `--logsLevel param or in ${this._config.ConfigFileDir}`)
+                .Glossary('arg', 'Command line argument (ex. "npm start --port 8000 --logsLevel 2")')
+                .Glossary('.env', 'Environment config file named ".env" located in main catalog of the application. Should be defined once and never changed. This file in not attached to git repository.')
+                .Glossary('config', 'App configuration file. Defined in: ' + this._config.ConfigFileDir + ' (taken from .env file)')
+                .Glossary('Remote Shell', 'Shell/bash/terminal called remotely for example by http (you may use this one: https://github.com/tBlabs/RemoteShell). Should be used only in Development Mode.')
+                .Glossary('{event name} @socket', 'Api accessible only via socket client.')
+                .Glossary('Development Mode', 'When this app is running on Computer, not Raspberry Pi. Remote Shell required.')
+                .Glossary('Production Mode', 'When this app is running on Raspberry Pi, not Computer. Remote Shell not required, internal gonna be used.')
+                .Glossary('||', 'if value on the left is not empty use value on the right (Like in Javascript)')
+                .Config("CONFIG_FILE_DIR", process.env.CONFIG_FILE_DIR, "empty", "CONFIG_FILE_DIR=./config.json", '.env')
+                .Config("REMOTE_SHELL", process.env.REMOTE_SHELL, "empty", "REMOTE_SHELL=http://192.168.43.229:3000", '.env')
+                .Config("port", this._config.Port.toString(), "8000", "1234 (number value)", 'arg || config')
+                .Config("inputs", JSON.stringify(this._config.Inputs), "empty", `[{ "name": "Button1", "pin": 2, "pull": "none", "edge": "both" }]`, 'config')
+                .Config("outputs", JSON.stringify(this._config.Outputs), "empty", `[{ "name": "Led", "pin": 4 }]`, 'config')
+                .Config("pwm", JSON.stringify(this._config.Pwms), "empty", `[{ "name": "Led", "pin": 4 }]`, 'config')
+                .Config("logsLevel", this._config.LogsLevel.toString(), "1", `0 - off / 1 - logs / 2 - trace`, `arg || config`)
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
                 .Api('/set/pwm/:name/:value', `Set specified PWM IO to given value (from 0 to 255)`)
-                .Requirement('Active "Remote Shell" utility', 'Is necessary to download config file. (fs module may be used instead /IFileSystem/).')
-                .Requirement(`Config file "config.json" in "${this._config.ConfigFileDir}"`, 'Is necessary to start the app. Defines server port and IO configuration.');
+                .Api('input-change @socket', `Read Digital Input value`)
+                .Requirement('Active "Remote Shell" utility in Development Mode', 'Is necessary to download config file. (fs module may be used instead /interface IFileSystem/).')
+                .Requirement(`Config file`, 'Is necessary for app start. Defines server port and IO configuration (look at Config section).');
             res.send(help.ToString());
         });
     }

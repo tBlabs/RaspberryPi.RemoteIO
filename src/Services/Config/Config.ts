@@ -11,8 +11,6 @@ import { RawConfig } from "./RawConfig";
 @injectable()
 export class Config implements IConfig
 {
-    private CONFIG_FILE_DIR = "/home/pi/RaspberryPi.RemoteIO/config.json";
-
     constructor(
         @inject(Types.IStartupArgs) private _args: IStartupArgs,
         @inject(Types.IFileSystem) private _fs: IFileSystem)
@@ -22,12 +20,15 @@ export class Config implements IConfig
     {
         try 
         {
-            this.configAsString = await this._fs.ReadFile(this.CONFIG_FILE_DIR);
+            if (this.ConfigFileDir === "") 
+                throw new Error(`Config file dir not defined. Should be in .env file under key CONFIG_FILE_DIR.`)
+
+            this.configAsString = await this._fs.ReadFile(this.ConfigFileDir);
             this.config = JSON.parse(this.configAsString);
         }
         catch (error)
         {
-            throw new Error(`Could not load config file (from ${this.CONFIG_FILE_DIR}). Was remote shell active (@ ${process.env.REMOTE_SHELL}) at the moment of app start? (this question is valid only in remote mode)`);
+            throw new Error(`Could not load config file (from ${this.ConfigFileDir}). In remote mode check if remote shell (@ ${process.env.REMOTE_SHELL}) was active at the moment of app start?`);
         }
     }
 
@@ -72,6 +73,6 @@ export class Config implements IConfig
 
     public get ConfigFileDir(): string
     {
-        return this.CONFIG_FILE_DIR;
+        return process.env.CONFIG_FILE_DIR || "";
     }
 }

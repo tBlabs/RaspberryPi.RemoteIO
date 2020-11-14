@@ -72,6 +72,10 @@ class HelpBuilder {
     }
     get Styles() {
         return `<style>
+        html {
+            background-color: #f0f0f0;
+        }
+
         div {
             padding: 18px;
             margin: 0;
@@ -109,7 +113,7 @@ class HelpBuilder {
         th, td {
             padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #ccc;
         }
         </style>`;
     }
@@ -144,7 +148,7 @@ class HelpBuilder {
             + this.Section("Status", this.Statuses)
             + this.Section("Config", this.Configs)
             + this.Section("API", this.Apis)
-            + this.Section("Requirements", this.Requirements)
+            + this.Section("Prerequisites", this.Requirements)
             + '</div>';
     }
 }

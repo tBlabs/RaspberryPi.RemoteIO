@@ -43,7 +43,7 @@ try {
     IoC.bind(DigitalOutputs_1.DigitalOutputs).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmIoFactory_1.PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
-    if (process.env.USE_REMOTE_SHELL) {
+    if (process.env.REMOTE_SHELL) {
         // console.log('Using RemoteShell');
         IoC.bind(Types_1.Types.IFileSystem).to(RemoteFs_1.RemoteFs).inTransientScope().whenTargetIsDefault();
     }

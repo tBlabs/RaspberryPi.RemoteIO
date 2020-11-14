@@ -52,7 +52,7 @@ try
     IoC.bind<PwmIoFactory>(PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind<Pwms>(Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
 
-    if (process.env.USE_REMOTE_SHELL)
+    if (process.env.REMOTE_SHELL)
     {
         // console.log('Using RemoteShell');
         IoC.bind<IFileSystem>(Types.IFileSystem).to(RemoteFs).inTransientScope().whenTargetIsDefault();
