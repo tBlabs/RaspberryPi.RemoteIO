@@ -24,6 +24,15 @@ export class Main
 
     public async Start(): Promise<void>
     {
+//         this._log.LogEnable = true;
+//         this._log.TraceEnable = true;
+//         // this._log.Log('TTTTT', new Error("adf").name)
+//         try {
+//             throw new Error("dupa")
+//         } catch (error) {
+//             this._log.Log('EEEEEEEEE', error)
+//         }
+// return
         await this.LoadConfiguration();
 
         await this.InitIo();

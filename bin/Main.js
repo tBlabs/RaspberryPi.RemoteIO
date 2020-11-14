@@ -30,6 +30,15 @@ let Main = class Main {
         this.problems = [];
     }
     async Start() {
+        //         this._log.LogEnable = true;
+        //         this._log.TraceEnable = true;
+        //         // this._log.Log('TTTTT', new Error("adf").name)
+        //         try {
+        //             throw new Error("dupa")
+        //         } catch (error) {
+        //             this._log.Log('EEEEEEEEE', error)
+        //         }
+        // return
         await this.LoadConfiguration();
         await this.InitIo();
         this.RegisterDigitalOutputsHandlers();

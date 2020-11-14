@@ -67,6 +67,11 @@ export class Logger implements ILogger
     // TODO: to sobie nie radzi z obiektami typu Error!!!!!!!
     private ObjectToString(obj: any): string
     {
+        if (obj instanceof Error)
+        {
+            return obj.message;
+        }
+        else
         if (obj?.constructor === String)
         {
             return obj.replace(/\n/g, '\\n')

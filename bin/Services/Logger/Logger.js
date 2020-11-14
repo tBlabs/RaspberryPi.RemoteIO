@@ -62,7 +62,10 @@ let Logger = class Logger {
     }
     // TODO: to sobie nie radzi z obiektami typu Error!!!!!!!
     ObjectToString(obj) {
-        if ((obj === null || obj === void 0 ? void 0 : obj.constructor) === String) {
+        if (obj instanceof Error) {
+            return obj.message;
+        }
+        else if ((obj === null || obj === void 0 ? void 0 : obj.constructor) === String) {
             return obj.replace(/\n/g, '\\n')
                 .replace(/\r/g, '\\r')
                 .replace(/\t/g, '\\t');
