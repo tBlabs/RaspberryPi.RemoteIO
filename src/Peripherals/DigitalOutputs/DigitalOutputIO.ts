@@ -17,29 +17,16 @@ export class DigitalOutputIO// implements IDisposable
 
             // this.IO = new Gpio(entry.pin, 'out');
             this.IO = new Gpio(entry.pin, { mode: Gpio.OUTPUT });
-            
+
             _log.Log("Registered.");
         }
         catch (error)
         {
-            _log.Log(`Registering error:`, error.message);
+            _log.Error(`Registering error: ${error.message}. Is app running on Raspberry Pi?`);
         }
     }
 
-    // public async Set(value: BinaryValue): Promise<void>
-    // {
-    //     return new Promise((resolve, reject) =>
-    //     {
-    //         this.IO.write(value, (err) =>
-    //         {
-    //             if (err)
-    //                 reject(err);
-
-    //             resolve();
-    //         });
-    //     });
-    // }
-    public  Set(value: 0 | 1): void
+    public Set(value: 0 | 1): void
     {
         this.IO.digitalWrite(value);
     }
@@ -48,23 +35,4 @@ export class DigitalOutputIO// implements IDisposable
     {
         return this.IO.digitalRead() as 0 | 1;
     }
-
-    // public async Get(): Promise<BinaryValue>
-    // {
-    //     return new Promise((resolve, reject) =>
-    //     {
-    //         this.IO.read((err, value) =>
-    //         {
-    //             if (err)
-    //                 reject(err);
-
-    //             resolve(value);
-    //         });
-    //     });
-    // }
-
-    // public Dispose(): void
-    // {
-    //     this.IO.unexport();
-    // }
 }

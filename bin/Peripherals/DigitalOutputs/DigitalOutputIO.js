@@ -12,21 +12,9 @@ class DigitalOutputIO // implements IDisposable
             _log.Log("Registered.");
         }
         catch (error) {
-            _log.Log(`Registering error:`, error.message);
+            _log.Error(`Registering error: ${error.message}. Is app running on Raspberry Pi?`);
         }
     }
-    // public async Set(value: BinaryValue): Promise<void>
-    // {
-    //     return new Promise((resolve, reject) =>
-    //     {
-    //         this.IO.write(value, (err) =>
-    //         {
-    //             if (err)
-    //                 reject(err);
-    //             resolve();
-    //         });
-    //     });
-    // }
     Set(value) {
         this.IO.digitalWrite(value);
     }

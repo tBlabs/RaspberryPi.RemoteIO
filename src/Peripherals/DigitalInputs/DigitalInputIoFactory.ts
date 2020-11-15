@@ -4,8 +4,6 @@ import { ILogger } from "../../Services/Logger/ILogger";
 import { DigitalInputConfigEntry } from "./DigitalInputConfigEntry";
 import { DigitalInputIO } from "./DigitalInputIO";
 
-
-
 @injectable()
 export class DigitalInputIoFactory
 {

@@ -11,7 +11,7 @@ class PwmIO {
             _log.Log("Registered.");
         }
         catch (error) {
-            _log.Error(`Registering error: ${error.message}. Is app running at Raspberry Pi?`);
+            _log.Error(`Registering error: ${error.message}. Is app running on Raspberry Pi?`);
         }
     }
     Set(dutyCycle) {

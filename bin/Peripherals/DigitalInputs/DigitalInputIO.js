@@ -50,8 +50,11 @@ class DigitalInputIO {
             _log.Log("Registered.");
         }
         catch (error) {
-            _log.Error("Registering error:", error.message);
+            _log.Error(`Registering error: ${error.message}. Is app running on Raspberry Pi?`);
         }
+    }
+    Get() {
+        return this.state;
     }
 }
 exports.DigitalInputIO = DigitalInputIO;

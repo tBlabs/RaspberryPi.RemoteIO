@@ -8,7 +8,7 @@ import { DigitalOutputIO } from './DigitalOutputIO';
 import { DigitalOutputFactory } from './DigitalOutputFactory';
 
 @injectable()
-export class DigitalOutputs implements IDisposable
+export class DigitalOutputs
 {
     private outputs: DigitalOutputIO[] = [];
 
@@ -28,7 +28,7 @@ export class DigitalOutputs implements IDisposable
         });
     }
 
-    public async SetValue(name: string, value: number): Promise<void>
+    public SetValue(name: string, value: number): void
     {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);
 
@@ -42,13 +42,13 @@ export class DigitalOutputs implements IDisposable
         }
         else
         {
-            await io.Set(+value as BinaryValue);
+            io.Set(+value as BinaryValue);
 
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
 
-    public async GetValue(name: string): Promise<BinaryValue | undefined>
+    public GetValue(name: string): BinaryValue | undefined
     {
         this._log.Trace(`Reading output "${name}" value...`);
 
@@ -62,19 +62,11 @@ export class DigitalOutputs implements IDisposable
         }
         else
         {
-            const value = await io.Get();
+            const value = io.Get();
 
             this._log.Trace(`"${name}" value is ${value}.`);
 
             return value;
         }
-    }
-
-    public Dispose(): void
-    {
-        this.outputs.forEach((o: DigitalOutputIO) =>
-        {
-            o.Dispose();
-        });
     }
 }

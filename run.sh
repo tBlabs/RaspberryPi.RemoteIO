@@ -1,1 +1,1 @@
-node bin/startup.js --port 3434 --logsLevel 2
+sudo node bin/startup.js --port 8000 --logsLevel 2

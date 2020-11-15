@@ -28,7 +28,7 @@ let DigitalOutputs = class DigitalOutputs {
             this.outputs.push(output);
         });
     }
-    async SetValue(name, value) {
+    SetValue(name, value) {
         this._log.Trace(`Setting output "${name}" to value ${value}...`);
         const io = this.outputs.find(x => x.Name === name);
         if (io === undefined) {
@@ -36,11 +36,11 @@ let DigitalOutputs = class DigitalOutputs {
             throw new Error(`IO "${name}" not found.`);
         }
         else {
-            await io.Set(+value);
+            io.Set(+value);
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
-    async GetValue(name) {
+    GetValue(name) {
         this._log.Trace(`Reading output "${name}" value...`);
         const io = this.outputs.find(x => x.Name === name);
         if (io === undefined) {
@@ -48,15 +48,10 @@ let DigitalOutputs = class DigitalOutputs {
             throw new Error(`IO "${name}" not found.`);
         }
         else {
-            const value = await io.Get();
+            const value = io.Get();
             this._log.Trace(`"${name}" value is ${value}.`);
             return value;
         }
-    }
-    Dispose() {
-        this.outputs.forEach((o) => {
-            o.Dispose();
-        });
     }
 };
 DigitalOutputs = __decorate([

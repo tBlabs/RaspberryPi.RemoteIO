@@ -53,11 +53,6 @@ let Main = class Main {
             i++;
         }, 10 * 1000);
     }
-    RegisterDigitalInputsHandlers() {
-        this._inputs.OnChange((name, value) => {
-            this._server.SendToAllClients('input-change', name, value);
-        });
-    }
     RegisterHelpHandler() {
         this._server.OnQuery('/', (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi IO driver via Http & Socket")
@@ -80,10 +75,20 @@ let Main = class Main {
                 .Api('/set/output/:name/:value', `Set specified Output IO to given value (0 or 1)`)
                 .Api('/get/output/:name/value', `Returns Output current value`)
                 .Api('/set/pwm/:name/:value', `Set specified PWM IO to given value (from 0 to 255)`)
+                .Api('/get/input/:name/value', `Get specified Digital Input state (0 or 1)`)
                 .Api('input-change @socket', `Read Digital Input value`)
                 .Requirement('Active "Remote Shell" utility in Development Mode', 'Is necessary to download config file. (fs module may be used instead /interface IFileSystem/).')
                 .Requirement(`Config file`, 'Is necessary for app start. Defines server port and IO configuration (look at Config section).');
             res.send(help.ToString());
+        });
+    }
+    RegisterDigitalInputsHandlers() {
+        this._server.OnQuery('/get/input/:name/value', (req, res) => {
+            var _a;
+            res.send(((_a = this._inputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || "");
+        });
+        this._inputs.OnChange((name, value) => {
+            this._server.SendToAllClients('input-change', name, value);
         });
     }
     RegisterAnalogOutputsHandlers() {
@@ -92,12 +97,12 @@ let Main = class Main {
         });
     }
     RegisterDigitalOutputsHandlers() {
-        this._server.OnCommand('/set/output/:name/:value', async (params) => {
-            await this._outputs.SetValue(params.name, +params.value);
+        this._server.OnCommand('/set/output/:name/:value', (params) => {
+            this._outputs.SetValue(params.name, +params.value);
         });
-        this._server.OnQuery('/get/output/:name/value', async (req, res) => {
+        this._server.OnQuery('/get/output/:name/value', (req, res) => {
             var _a;
-            res.send(await ((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || "");
+            res.send(((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || "");
         });
     }
     async InitIo() {

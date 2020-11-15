@@ -57,8 +57,13 @@ export class DigitalInputIO
         }
         catch (error)
         {
-            _log.Error("Registering error:", error.message);
+            _log.Error(`Registering error: ${error.message}. Is app running on Raspberry Pi?`);
         }
+    }
+
+    public Get(): 0 | 1
+    {
+        return this.state as 0 | 1;
     }
 
     public OnStateChange!: (state: number) => void;

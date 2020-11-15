@@ -21,7 +21,7 @@ export class PwmIO
         }
         catch (error)
         {
-            _log.Error(`Registering error: ${error.message}. Is app running at Raspberry Pi?`);
+            _log.Error(`Registering error: ${error.message}. Is app running on Raspberry Pi?`);
         }
     }
 

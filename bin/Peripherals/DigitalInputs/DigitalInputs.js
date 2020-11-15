@@ -20,15 +20,30 @@ let DigitalInputs = class DigitalInputs {
         this._digitalInputFactory = _digitalInputFactory;
         this._config = _config;
         this._log = _log;
+        this.inputs = [];
     }
     async Init() {
         this._config.Inputs.forEach(io => {
             const input = this._digitalInputFactory.Create(io);
+            this.inputs.push(input);
             input.OnStateChange = (state) => {
                 var _a;
                 (_a = this.callback) === null || _a === void 0 ? void 0 : _a.call(this, input.Name, state);
             };
         });
+    }
+    GetValue(name) {
+        this._log.Trace(`Reading output "${name}" value...`);
+        const io = this.inputs.find(x => x.Name === name);
+        if (io === undefined) {
+            this._log.Trace(`IO not found`);
+            throw new Error(`IO "${name}" not found.`);
+        }
+        else {
+            const value = io.Get();
+            this._log.Trace(`"${name}" value is ${value}.`);
+            return value;
+        }
     }
     OnChange(callback) {
         this.callback = callback;
