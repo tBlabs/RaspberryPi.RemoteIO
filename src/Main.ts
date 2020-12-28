@@ -118,7 +118,7 @@ export class Main
 
     private RegisterDigitalOutputsHandlers()
     {
-        this._server.OnCommand('/set/output/:name/:value',  (params) =>
+        this._server.OnCommand('/set/output/:name/:value', async (params) =>
         {
             const durationTimer = new StopWatch(true);
             this._outputs.SetValue(params.name, +params.value);
