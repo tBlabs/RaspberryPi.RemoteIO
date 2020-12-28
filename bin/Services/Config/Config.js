@@ -20,6 +20,10 @@ let Config = class Config {
         this._fs = _fs;
         this.configAsString = "(not loaded yet)";
     }
+    get SimulationMode() {
+        // return this._args.Args.simulation || false;
+        return true;
+    }
     async Init() {
         try {
             if (this.ConfigFileDir === "")

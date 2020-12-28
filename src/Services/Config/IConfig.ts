@@ -4,6 +4,7 @@ import { DigitalInputConfigEntry } from "../../Peripherals/DigitalInputs/Digital
 
 export interface IConfig
 {
+    SimulationMode: any;
     Raw: string;
     LogsLevel: number;
     Port: number;

@@ -15,6 +15,11 @@ export class Config implements IConfig
         @inject(Types.IStartupArgs) private _args: IStartupArgs,
         @inject(Types.IFileSystem) private _fs: IFileSystem)
     { }
+    public get SimulationMode(): boolean
+    {
+        // return this._args.Args.simulation || false;
+        return true;
+    }
 
     public async Init(): Promise<void>
     {
@@ -41,7 +46,7 @@ export class Config implements IConfig
     private config!: RawConfig;
 
     public get Port(): number
-    {
+    { 
         return this._args.Args.port || this.config?.port || 8000;
     }
 

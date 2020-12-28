@@ -20,7 +20,6 @@ export class Pwms
     {
         this._config.Pwms.forEach((io) =>
         {
-            // const pwm = new PwmIO(io);
             const pwm = this._pwmIoFactory.Create(io);
 
             this.pwms.push(pwm);

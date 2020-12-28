@@ -42,7 +42,8 @@ export class DigitalOutputs
         }
         else
         {
-            io.Set(+value as BinaryValue);
+            if (!this._config.SimulationMode)
+                io.Set(+value as BinaryValue);
 
             this._log.Trace(`"${name}" set to ${value}.`);
         }
@@ -62,9 +63,15 @@ export class DigitalOutputs
         }
         else
         {
-            const value = io.Get();
+            let value: 0 | 1 | undefined = undefined;
 
-            this._log.Trace(`"${name}" value is ${value}.`);
+            if (!this._config.SimulationMode)
+            {
+                value = io.Get();
+
+                this._log.Trace(`"${name}" value is ${value}.`);
+            }
+            else this._log.Trace(`Simulation mode.`);
 
             return value;
         }

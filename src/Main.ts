@@ -7,6 +7,8 @@ import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 import { Pwms } from './Peripherals/Pwms/PwmOutputs';
 import { DigitalInputs } from './Peripherals/DigitalInputs/DigitalInputs';
+import { DelayAsync } from './Utils/DelayAsync';
+import { StopWatch } from './Utils/StopWatch';
 
 @injectable()
 export class Main
@@ -26,14 +28,14 @@ export class Main
     {
         await this.LoadConfiguration();
 
-        await this.InitIo();
+        this.InitIo();
 
         this.RegisterDigitalOutputsHandlers();
         this.RegisterAnalogOutputsHandlers();
         this.RegisterDigitalInputsHandlers();
 
         this.RegisterHelpHandler();
-        this.EngageHeartbeat();
+        // this.EngageHeartbeat();
 
         this._server.Start();
 
@@ -92,7 +94,7 @@ export class Main
             res.send(help.ToString());
         });
     }
-    
+
     private RegisterDigitalInputsHandlers()
     {
         this._server.OnQuery('/get/input/:name/value', (req, res) =>
@@ -116,23 +118,26 @@ export class Main
 
     private RegisterDigitalOutputsHandlers()
     {
-        this._server.OnCommand('/set/output/:name/:value', (params) =>
+        this._server.OnCommand('/set/output/:name/:value', async (params) =>
         {
+            const durationTimer = new StopWatch(true);
             this._outputs.SetValue(params.name, +params.value);
+            this._log.Trace('Operation took', durationTimer.ElapsedMs);
         });
-        this._server.OnQuery('/get/output/:name/value', (req, res) =>
+
+        this._server.OnQuery('/get/output/:name/value', async (req, res) => 
         {
             res.send(this._outputs.GetValue(req.params.name)?.toString() || "");
         });
     }
 
-    private async InitIo()
+    private InitIo()
     {
         try
         {
-            await this._outputs.Init();
-            await this._pwms.Init();
-            await this._inputs.Init();
+            this._outputs.Init();
+            this._pwms.Init();
+            this._inputs.Init();
         }
         catch (error)
         {
@@ -144,7 +149,7 @@ export class Main
     {
         try
         {
-            this._log.Log(`Loading config...`); // This probably won't work because log.SetLogLevel is after config load
+            this._log.Log(`Loading config from "${this._config.ConfigFileDir}"...`); // This probably won't work because log.SetLogLevel is after config load
 
             await this._config.Init();
 

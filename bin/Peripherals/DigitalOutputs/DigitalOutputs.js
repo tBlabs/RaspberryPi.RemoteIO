@@ -36,7 +36,8 @@ let DigitalOutputs = class DigitalOutputs {
             throw new Error(`IO "${name}" not found.`);
         }
         else {
-            io.Set(+value);
+            if (!this._config.SimulationMode)
+                io.Set(+value);
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
@@ -48,8 +49,13 @@ let DigitalOutputs = class DigitalOutputs {
             throw new Error(`IO "${name}" not found.`);
         }
         else {
-            const value = io.Get();
-            this._log.Trace(`"${name}" value is ${value}.`);
+            let value = undefined;
+            if (!this._config.SimulationMode) {
+                value = io.Get();
+                this._log.Trace(`"${name}" value is ${value}.`);
+            }
+            else
+                this._log.Trace(`Simulation mode.`);
             return value;
         }
     }

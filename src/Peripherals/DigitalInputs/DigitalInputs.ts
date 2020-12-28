@@ -14,10 +14,10 @@ export class DigitalInputs
         @inject(Types.ILogger) private _log: ILogger)
     { }
 
-    private inputs: DigitalInputIo[] = [];
+    private inputs: DigitalInputIO[] = [];
     private callback!: (inputName: string, inputState: number) => void;
 
-    public async Init(): Promise<void>
+    public Init(): void
     {
         this._config.Inputs.forEach(io =>
         {

@@ -19,6 +19,7 @@ const Types_1 = require("./IoC/Types");
 const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
 const PwmOutputs_1 = require("./Peripherals/Pwms/PwmOutputs");
 const DigitalInputs_1 = require("./Peripherals/DigitalInputs/DigitalInputs");
+const StopWatch_1 = require("./Utils/StopWatch");
 let Main = class Main {
     constructor(_config, _log, _server, _inputs, _pwms, _outputs) {
         this._config = _config;
@@ -31,12 +32,12 @@ let Main = class Main {
     }
     async Start() {
         await this.LoadConfiguration();
-        await this.InitIo();
+        this.InitIo();
         this.RegisterDigitalOutputsHandlers();
         this.RegisterAnalogOutputsHandlers();
         this.RegisterDigitalInputsHandlers();
         this.RegisterHelpHandler();
-        this.EngageHeartbeat();
+        // this.EngageHeartbeat();
         this._server.Start();
         this.RegisterSigInt();
     }
@@ -97,19 +98,21 @@ let Main = class Main {
         });
     }
     RegisterDigitalOutputsHandlers() {
-        this._server.OnCommand('/set/output/:name/:value', (params) => {
+        this._server.OnCommand('/set/output/:name/:value', async (params) => {
+            const durationTimer = new StopWatch_1.StopWatch(true);
             this._outputs.SetValue(params.name, +params.value);
+            this._log.Trace('Operation took', durationTimer.ElapsedMs);
         });
-        this._server.OnQuery('/get/output/:name/value', (req, res) => {
+        this._server.OnQuery('/get/output/:name/value', async (req, res) => {
             var _a;
             res.send(((_a = this._outputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || "");
         });
     }
-    async InitIo() {
+    InitIo() {
         try {
-            await this._outputs.Init();
-            await this._pwms.Init();
-            await this._inputs.Init();
+            this._outputs.Init();
+            this._pwms.Init();
+            this._inputs.Init();
         }
         catch (error) {
             this.problems.push("⚡ Could not load IO driver on this machine. onoff and pigpio libraries works only on Raspberry Pi.");
@@ -117,7 +120,7 @@ let Main = class Main {
     }
     async LoadConfiguration() {
         try {
-            this._log.Log(`Loading config...`); // This probably won't work because log.SetLogLevel is after config load
+            this._log.Log(`Loading config from "${this._config.ConfigFileDir}"...`); // This probably won't work because log.SetLogLevel is after config load
             await this._config.Init();
             this._log.SetLogLevel(this._config.LogsLevel); // This must be here due to circular dependency :(
             this._log.Trace(`Config loaded:`, this._config.Raw);

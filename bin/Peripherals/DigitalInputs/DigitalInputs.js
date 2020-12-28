@@ -22,7 +22,7 @@ let DigitalInputs = class DigitalInputs {
         this._log = _log;
         this.inputs = [];
     }
-    async Init() {
+    Init() {
         this._config.Inputs.forEach(io => {
             const input = this._digitalInputFactory.Create(io);
             this.inputs.push(input);
