@@ -98,7 +98,7 @@ let Main = class Main {
         });
     }
     RegisterDigitalOutputsHandlers() {
-        this._server.OnCommand('/set/output/:name/:value', async (params) => {
+        this._server.OnCommand('/set/output/:name/:value', (params) => {
             const durationTimer = new StopWatch_1.StopWatch(true);
             this._outputs.SetValue(params.name, +params.value);
             this._log.Trace('Operation took', durationTimer.ElapsedMs);
