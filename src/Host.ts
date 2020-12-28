@@ -32,7 +32,7 @@ export class Host
         this.httpServer = http.createServer(this.expressServer);
         const socketHost = SocketIoHost(this.httpServer);
 
-        socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${ e }`));
+        socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${e}`));
 
         socketHost.on('connection', (socket) =>
         {
@@ -43,7 +43,7 @@ export class Host
 
         this.expressServer.get('/ping', (req, res) => res.send('pong'));
     }
- 
+
     public OnCommand(url, callback: (urlParams) => void)
     {
         this.expressServer.get(url, (req, res) =>
@@ -83,7 +83,14 @@ export class Host
 
     public Dispose()
     {
-        this.httpServer.close(()=>this._log.Log('Http server closed.'));
-        this.server.close(() => this._log.Log('Server closed.'));
+        this.server.close(() =>
+        {
+            this._log.Log('Server closed.');
+            this.httpServer.close(() =>
+            {
+                this._log.Log('Http server closed. Exiting app...');
+                process.exit();
+            });
+        });
     }
 }
