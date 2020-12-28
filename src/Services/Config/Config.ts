@@ -17,8 +17,7 @@ export class Config implements IConfig
     { }
     public get SimulationMode(): boolean
     {
-        // return this._args.Args.simulation || false;
-        return true;
+        return this._args.Args.simulation || false;
     }
 
     public async Init(): Promise<void>
