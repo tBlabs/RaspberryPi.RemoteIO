@@ -122,7 +122,7 @@ export class Main
         {
             const durationTimer = new StopWatch(true);
             this._outputs.SetValue(params.name, +params.value);
-            this._log.Trace('Operation took', durationTimer.ElapsedMs);
+            this._log.Trace('Operation took', durationTimer.ElapsedMs, 'ms');
         });
 
         this._server.OnQuery('/get/output/:name/value', async (req, res) => 

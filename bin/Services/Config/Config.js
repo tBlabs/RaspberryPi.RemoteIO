@@ -21,6 +21,7 @@ let Config = class Config {
         this.configAsString = "(not loaded yet)";
     }
     get SimulationMode() {
+        // return true;
         return this._args.Args.simulation || false;
     }
     async Init() {

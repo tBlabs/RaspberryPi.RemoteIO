@@ -26,6 +26,13 @@ let Host = class Host {
         this.clients = new Clients_1.Clients();
         this.expressServer = express();
         this.expressServer.use(cors());
+        this.expressServer.use((req, res, next) => {
+            if (req.headers.requestid) {
+                // console.log('REQ ID', req.headers.requestid);
+                res.setHeader("requestid", req.headers.requestid);
+            }
+            next();
+        });
         this.httpServer = http.createServer(this.expressServer);
         const socketHost = SocketIoHost(this.httpServer);
         socketHost.on('error', (e) => this._log.Log(`SOCKET ERROR ${e}`));
@@ -38,10 +45,10 @@ let Host = class Host {
     SendToAllClients(eventName, ...args) {
         this.clients.SendToAll(eventName, ...args);
     }
-    OnCommand(url, callback) {
-        this.expressServer.get(url, (req, res) => {
+    async OnCommand(url, callback) {
+        this.expressServer.all(url, async (req, res) => {
             try {
-                callback(req.params);
+                await callback(req.params);
                 res.sendStatus(200);
             }
             catch (error) {
@@ -49,10 +56,10 @@ let Host = class Host {
             }
         });
     }
-    OnQuery(url, callback) {
-        this.expressServer.get(url, (req, res) => {
+    async OnQuery(url, callback) {
+        this.expressServer.get(url, async (req, res) => {
             try {
-                callback(req, res);
+                await callback(req, res);
             }
             catch (error) {
                 res.sendStatus(500);

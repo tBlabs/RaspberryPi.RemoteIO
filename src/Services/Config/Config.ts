@@ -17,6 +17,7 @@ export class Config implements IConfig
     { }
     public get SimulationMode(): boolean
     {
+        // return true;
         return this._args.Args.simulation || false;
     }
 

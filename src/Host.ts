@@ -9,6 +9,7 @@ import { IConfig } from "./Services/Config/IConfig";
 import * as SocketIoHost from 'socket.io';
 import * as http from 'http';
 import { Clients } from './Clients';
+import { DelayAsync } from './Utils/DelayAsync';
 
 @injectable()
 export class Host
@@ -29,6 +30,18 @@ export class Host
     {
         this.expressServer = express();
         this.expressServer.use(cors());
+
+        this.expressServer.use((req, res, next)=>{
+
+            if (req.headers.requestid)
+            {
+                // console.log('REQ ID', req.headers.requestid);
+                res.setHeader("requestid", req.headers.requestid);
+            }
+
+            next();
+        });
+
         this.httpServer = http.createServer(this.expressServer);
         const socketHost = SocketIoHost(this.httpServer);
 
@@ -44,13 +57,13 @@ export class Host
         this.expressServer.get('/ping', (req, res) => res.send('pong'));
     }
 
-    public OnCommand(url, callback: (urlParams) => void)
+    public async OnCommand(url, callback: (urlParams) => Promise<void>): Promise<void>
     {
-        this.expressServer.get(url, (req, res) =>
+        this.expressServer.all(url, async (req, res) =>
         {
             try
             {
-                callback(req.params);
+                await callback(req.params);
 
                 res.sendStatus(200);
             }
@@ -61,13 +74,13 @@ export class Host
         });
     }
 
-    public OnQuery(url, callback: (req, res) => void)
+    public async OnQuery(url, callback: (req, res) => Promise<void>): Promise<void>
     {
-        this.expressServer.get(url, (req, res) =>
+        this.expressServer.get(url, async (req, res) =>
         {
             try
             {
-                callback(req, res);
+                await callback(req, res);
             }
             catch (error)
             {

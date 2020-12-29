@@ -101,7 +101,7 @@ let Main = class Main {
         this._server.OnCommand('/set/output/:name/:value', async (params) => {
             const durationTimer = new StopWatch_1.StopWatch(true);
             this._outputs.SetValue(params.name, +params.value);
-            this._log.Trace('Operation took', durationTimer.ElapsedMs);
+            this._log.Trace('Operation took', durationTimer.ElapsedMs, 'ms');
         });
         this._server.OnQuery('/get/output/:name/value', async (req, res) => {
             var _a;
