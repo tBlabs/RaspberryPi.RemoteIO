@@ -20,8 +20,10 @@ const HelpBuilder_1 = require("./Utils/HelpBuilder/HelpBuilder");
 const PwmOutputs_1 = require("./Peripherals/Pwms/PwmOutputs");
 const DigitalInputs_1 = require("./Peripherals/DigitalInputs/DigitalInputs");
 const StopWatch_1 = require("./Utils/StopWatch");
+const EnvValidator_1 = require("./Services/Environment/EnvValidator");
 let Main = class Main {
-    constructor(_config, _log, _server, _inputs, _pwms, _outputs) {
+    constructor(_env, _config, _log, _server, _inputs, _pwms, _outputs) {
+        this._env = _env;
         this._config = _config;
         this._log = _log;
         this._server = _server;
@@ -31,6 +33,8 @@ let Main = class Main {
         this.problems = [];
     }
     async Start() {
+        if (!this._env.Validate())
+            return;
         await this.LoadConfiguration();
         this.InitIo();
         this.RegisterDigitalOutputsHandlers();
@@ -55,7 +59,7 @@ let Main = class Main {
         }, 10 * 1000);
     }
     RegisterHelpHandler() {
-        this._server.OnQuery('/', (req, res) => {
+        this._server.OnQuery('/', async (req, res) => {
             const help = new HelpBuilder_1.HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi IO driver via Http & Socket")
                 .Warning(this.problems)
                 .Glossary('arg', 'Command line argument (ex. "npm start --port 8000 --logsLevel 2")')
@@ -84,7 +88,7 @@ let Main = class Main {
         });
     }
     RegisterDigitalInputsHandlers() {
-        this._server.OnQuery('/get/input/:name/value', (req, res) => {
+        this._server.OnQuery('/get/input/:name/value', async (req, res) => {
             var _a;
             res.send(((_a = this._inputs.GetValue(req.params.name)) === null || _a === void 0 ? void 0 : _a.toString()) || "");
         });
@@ -93,7 +97,7 @@ let Main = class Main {
         });
     }
     RegisterAnalogOutputsHandlers() {
-        this._server.OnCommand('/set/pwm/:name/:value', params => {
+        this._server.OnCommand('/set/pwm/:name/:value', async (params) => {
             this._pwms.SetValue(params.name, +params.value);
         });
     }
@@ -126,16 +130,16 @@ let Main = class Main {
             this._log.Trace(`Config loaded:`, this._config.Raw);
         }
         catch (error) {
-            this._log.Error('Could not load config', error.message);
+            this._log.Error('Config load problem:', error.message);
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
     }
 };
 Main = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject(Types_1.Types.IConfig)),
-    __param(1, inversify_1.inject(Types_1.Types.ILogger)),
-    __metadata("design:paramtypes", [Object, Object, Host_1.Host,
+    __param(1, inversify_1.inject(Types_1.Types.IConfig)),
+    __param(2, inversify_1.inject(Types_1.Types.ILogger)),
+    __metadata("design:paramtypes", [EnvValidator_1.EnvValidator, Object, Object, Host_1.Host,
         DigitalInputs_1.DigitalInputs,
         PwmOutputs_1.Pwms,
         DigitalOutputs_1.DigitalOutputs])

@@ -23,9 +23,11 @@ const DigitalInputs_1 = require("../Peripherals/DigitalInputs/DigitalInputs");
 const PwmIoFactory_1 = require("../Peripherals/Pwms/PwmIoFactory");
 const DigitalInputIoFactory_1 = require("../Peripherals/DigitalInputs/DigitalInputIoFactory");
 const DigitalOutputFactory_1 = require("../Peripherals/DigitalOutputs/DigitalOutputFactory");
+const EnvValidator_1 = require("../Services/Environment/EnvValidator");
 const IoC = new inversify_1.Container();
 exports.IoC = IoC;
 try {
+    IoC.bind(EnvValidator_1.EnvValidator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.IEnvironment).to(Environment_1.Environment).inSingletonScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.IRunMode).to(RunMode_1.RunMode).inSingletonScope().whenTargetIsDefault();
     IoC.bind(Types_1.Types.ILogger).to(Logger_1.Logger).inSingletonScope().whenTargetIsDefault();
@@ -44,7 +46,7 @@ try {
     IoC.bind(PwmIoFactory_1.PwmIoFactory).toSelf().inSingletonScope().whenTargetIsDefault();
     IoC.bind(PwmOutputs_1.Pwms).toSelf().inSingletonScope().whenTargetIsDefault();
     if (process.env.REMOTE_SHELL) {
-        // console.log('Using RemoteShell');
+        console.log('[REMOTE MODE: Using RemoteShell]');
         IoC.bind(Types_1.Types.IFileSystem).to(RemoteFs_1.RemoteFs).inTransientScope().whenTargetIsDefault();
     }
     else {

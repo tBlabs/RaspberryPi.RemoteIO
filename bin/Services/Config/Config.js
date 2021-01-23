@@ -32,7 +32,7 @@ let Config = class Config {
             this.config = JSON.parse(this.configAsString);
         }
         catch (error) {
-            throw new Error(`Could not load config file (from ${this.ConfigFileDir}). In remote mode check if remote shell (@ ${process.env.REMOTE_SHELL}) was active at the moment of app start?`);
+            throw new Error(`Could not load config file (from ${this.ConfigFileDir}). In remote mode check if remote shell (@ ${process.env.REMOTE_SHELL}) is active at the moment of app start.`);
         }
     }
     get Raw() {

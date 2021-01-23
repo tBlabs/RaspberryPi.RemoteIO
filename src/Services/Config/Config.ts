@@ -25,7 +25,7 @@ export class Config implements IConfig
     {
         try 
         {
-            if (this.ConfigFileDir === "") 
+            if (this.ConfigFileDir === "")
                 throw new Error(`Config file dir not defined. Should be in .env file under key CONFIG_FILE_DIR.`)
 
             this.configAsString = await this._fs.ReadFile(this.ConfigFileDir);
@@ -33,7 +33,7 @@ export class Config implements IConfig
         }
         catch (error)
         {
-            throw new Error(`Could not load config file (from ${this.ConfigFileDir}). In remote mode check if remote shell (@ ${process.env.REMOTE_SHELL}) was active at the moment of app start?`);
+            throw new Error(`Could not load config file (from ${this.ConfigFileDir}). In remote mode check if remote shell (@ ${process.env.REMOTE_SHELL}) is active at the moment of app start.`);
         }
     }
 
@@ -46,7 +46,7 @@ export class Config implements IConfig
     private config!: RawConfig;
 
     public get Port(): number
-    { 
+    {
         return this._args.Args.port || this.config?.port || 8000;
     }
 

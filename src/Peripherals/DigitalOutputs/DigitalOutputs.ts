@@ -1,6 +1,5 @@
-import { BinaryValue } from 'onoff';
 import { inject, injectable } from 'inversify';
-import { IDisposable } from '../../IDisposable';
+import { IDisposable } from '../../Core/IDisposable';
 import { IConfig } from "../../Services/Config/IConfig";
 import { Types } from '../../IoC/Types';
 import { ILogger } from '../../Services/Logger/ILogger';
@@ -43,13 +42,13 @@ export class DigitalOutputs
         else
         {
             if (!this._config.SimulationMode)
-                io.Set(+value as BinaryValue);
+                io.Set(+value as 0 | 1);
 
             this._log.Trace(`"${name}" set to ${value}.`);
         }
     }
 
-    public GetValue(name: string): BinaryValue | undefined
+    public GetValue(name: string): 0 | 1 | undefined
     {
         this._log.Trace(`Reading output "${name}" value...`);
 

@@ -29,11 +29,13 @@ import { DigitalInputs } from '../Peripherals/DigitalInputs/DigitalInputs';
 import { PwmIoFactory } from "../Peripherals/Pwms/PwmIoFactory";
 import { DigitalInputIoFactory } from '../Peripherals/DigitalInputs/DigitalInputIoFactory';
 import { DigitalOutputFactory } from '../Peripherals/DigitalOutputs/DigitalOutputFactory';
+import { EnvValidator } from '../Services/Environment/EnvValidator';
 
 const IoC = new Container();
 
 try
 {
+    IoC.bind<EnvValidator>(EnvValidator).toSelf().inTransientScope().whenTargetIsDefault();
     IoC.bind<IEnvironment>(Types.IEnvironment).to(Environment).inSingletonScope().whenTargetIsDefault();
     IoC.bind<IRunMode>(Types.IRunMode).to(RunMode).inSingletonScope().whenTargetIsDefault();
     IoC.bind<ILogger>(Types.ILogger).to(Logger).inSingletonScope().whenTargetIsDefault();
@@ -54,7 +56,7 @@ try
 
     if (process.env.REMOTE_SHELL)
     {
-        // console.log('Using RemoteShell');
+        console.log('[REMOTE MODE: Using RemoteShell]');
         IoC.bind<IFileSystem>(Types.IFileSystem).to(RemoteFs).inTransientScope().whenTargetIsDefault();
     }
     else  

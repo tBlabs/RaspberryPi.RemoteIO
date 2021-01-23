@@ -7,13 +7,14 @@ import { ILogger } from './Services/Logger/ILogger';
 import { HelpBuilder } from './Utils/HelpBuilder/HelpBuilder';
 import { Pwms } from './Peripherals/Pwms/PwmOutputs';
 import { DigitalInputs } from './Peripherals/DigitalInputs/DigitalInputs';
-import { DelayAsync } from './Utils/DelayAsync';
 import { StopWatch } from './Utils/StopWatch';
+import { EnvValidator } from './Services/Environment/EnvValidator';
 
 @injectable()
 export class Main
 {
-    constructor(
+    constructor(  
+        private _env: EnvValidator,
         @inject(Types.IConfig) private _config: IConfig,
         @inject(Types.ILogger) private _log: ILogger,
         private _server: Host,
@@ -25,7 +26,9 @@ export class Main
     private problems: string[] = [];
 
     public async Start(): Promise<void>
-    {
+    { 
+         if (!this._env.Validate()) return;
+
         await this.LoadConfiguration();
 
         this.InitIo();
@@ -64,7 +67,7 @@ export class Main
 
     private RegisterHelpHandler()
     {
-        this._server.OnQuery('/', (req, res) =>
+        this._server.OnQuery('/', async (req, res) =>
         {
             const help = new HelpBuilder("RaspberryPi.RemoteIO", "Raspberry Pi IO driver via Http & Socket")
                 .Warning(this.problems)
@@ -97,7 +100,7 @@ export class Main
 
     private RegisterDigitalInputsHandlers()
     {
-        this._server.OnQuery('/get/input/:name/value', (req, res) =>
+        this._server.OnQuery('/get/input/:name/value', async (req, res) =>
         {
             res.send(this._inputs.GetValue(req.params.name)?.toString() || "");
         });
@@ -110,7 +113,7 @@ export class Main
 
     private RegisterAnalogOutputsHandlers()
     {
-        this._server.OnCommand('/set/pwm/:name/:value', params =>
+        this._server.OnCommand('/set/pwm/:name/:value', async (params) =>
         {
             this._pwms.SetValue(params.name, +params.value);
         });
@@ -159,7 +162,7 @@ export class Main
         }
         catch (error)
         {
-            this._log.Error('Could not load config', error.message);
+            this._log.Error('Config load problem:', error.message);
             this.problems.push(`⚡ Could not load configuration: ${error}`);
         }
     }
