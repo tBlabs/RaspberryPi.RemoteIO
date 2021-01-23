@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PwmIO = void 0;
 const pigpio_1 = require("pigpio");
 class PwmIO {
     constructor(_log, entry) {

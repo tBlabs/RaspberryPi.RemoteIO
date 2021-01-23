@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Host = void 0;
 const inversify_1 = require("inversify");
 const express = require("express");
 const cors = require("cors");

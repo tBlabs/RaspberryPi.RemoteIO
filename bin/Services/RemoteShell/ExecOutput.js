@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ExecOutput = void 0;
 class ExecOutput {
     constructor(code, stdout, stderr) {
         this.code = code;

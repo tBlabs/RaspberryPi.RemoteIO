@@ -12,6 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RemoteShell = void 0;
 const inversify_1 = require("inversify");
 require("reflect-metadata");
 const Types_1 = require("../../IoC/Types");
