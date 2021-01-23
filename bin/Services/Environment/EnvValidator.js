@@ -15,39 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EnvValidator = void 0;
 const inversify_1 = require("inversify");
 const Types_1 = require("../../IoC/Types");
-let EnvValidator = class EnvValidator {
+const EnvValidatorBase_1 = require("./EnvValidatorBase");
+let EnvValidator = class EnvValidator extends EnvValidatorBase_1.EnvValidatorBase {
     constructor(_log) {
-        this._log = _log;
+        super(_log);
     }
     Validate() {
-        const isEnvValid = this.MustBeDir('CONFIG_FILE_DIR')
-            && this.MayBeUrl('REMOTE_SHELL');
+        const isEnvValid = super.MustBeDir('CONFIG_FILE_DIR')
+            && super.MayBeUrl('REMOTE_SHELL');
         if (!isEnvValid)
             this._log.Error(`Can not start the application without correct value.`);
         return isEnvValid;
-    }
-    MustBeOneOf(paramName, options) {
-        const variable = process.env[paramName];
-        const isValid = (variable !== undefined) && (options.includes(variable));
-        if (!isValid)
-            this._log.Error(`.env variable "${paramName}" is not valid. Should be ONE OF [${options.join(", ")}] but is "${variable}".`);
-        return isValid;
-    }
-    MustBeDir(paramName) {
-        const dir = process.env[paramName];
-        const isValid = (dir !== undefined) && (dir.trim().length > 0); // TODO: poor validation
-        if (!isValid)
-            this._log.Error(`.env variable "${paramName}" is not valid. Should be DIRECTORY but is "${dir}".`);
-        return isValid;
-    }
-    MayBeUrl(paramName) {
-        const url = process.env[paramName];
-        if ((url === undefined) || (url === ""))
-            return true;
-        const isValid = (url.trim().length > 0); // TODO: poor validation
-        if (!isValid)
-            this._log.Error(`.env variable "${paramName}" is not valid. Should be URL or EMPTY but is "${url}".`);
-        return isValid;
     }
 };
 EnvValidator = __decorate([

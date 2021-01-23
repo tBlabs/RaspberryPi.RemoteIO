@@ -9,7 +9,6 @@ import { IConfig } from "./Services/Config/IConfig";
 import * as SocketIoHost from 'socket.io';
 import * as http from 'http';
 import { Clients } from './Clients';
-import { DelayAsync } from './Utils/DelayAsync';
 
 @injectable()
 export class Host
